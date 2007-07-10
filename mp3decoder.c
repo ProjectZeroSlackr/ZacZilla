@@ -29,8 +29,9 @@ Header files
 /*
  * Standard IPP headers 
  */
-#include "ippdefs.h"
-#include "ippAC.h"	/* Note: use ippaud.h with IPP 1.0 */
+#include <ippdefs.h>
+#include <ippAC.h>
+	/* Note: use ippaud.h with IPP 1.0 */
 
 /*
  * Definitions and prototypes for 2-function MP3 API 

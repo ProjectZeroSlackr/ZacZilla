@@ -344,41 +344,41 @@ static void cube_draw(void)
 		for (i = 3; i < 6; i++) { /* we can only see the front 3 faces... */
 			switch(z_avgs_f[i].place) {
 				case 0:
-					colour = (photo==0) ? LTGRAY : RED;
+					colour = (photo==0) ? GR_RGB(160,160,160) : GR_RGB(255,0,0);
 					break;
 				case 1:
-					colour = (photo==0) ? LTGRAY : GREEN;
+					colour = (photo==0) ? GR_RGB(160,160,160) : GR_RGB(0,255,0);
 					break;
 				case 2:
-					colour = (photo==0) ? GRAY : BLUE;
+					colour = (photo==0) ? GR_RGB(80,80,80) : GR_RGB(0,0,255);
 					break;
 				case 3:
-					colour = (photo==0) ? GRAY : YELLOW;
+					colour = (photo==0) ? GR_RGB(80,80,80) : GR_RGB(150,100,0);
 					break;
 				case 4:
-					colour = (photo==0) ? BLACK : MAGENTA;
+					colour = (photo==0) ? GR_RGB(0,0,0) : GR_RGB(200,0,0);
 					break;
 				case 5:
-					colour = (photo==0) ? BLACK : CYAN;
+					colour = (photo==0) ? GR_RGB(0,0,0) : GR_RGB(130,0,0);
 					break;
 			}
 			GrSetGCForeground(cube_gc, colour);
 			GrFillPoly(temp_pixmap, cube_gc, 5, faces[z_avgs_f[i].place]);
 		}
 	} else {
-		/* polygons not used so hidden lines can be gray in future
+		/* polygons not used so hidden lines can be GR_RGB(80,80,80) in future
 		 *  - once i work out how to do it, possibly with GrRegion stuff */
-		GrSetGCForeground(cube_gc, BLACK);
+		GrSetGCForeground(cube_gc, GR_RGB(0,0,0));
 		for (i = 0; i < 12; i++) {
 			cube_draw_line(lines[i].v1, lines[i].v2);
 		}
 	}
 	
 	if (t_disp) {
-		GrSetGCForeground(cube_gc, WHITE);
+		GrSetGCForeground(cube_gc, GR_RGB(0,0,0));
 		GrFillRect(temp_pixmap, cube_gc,
 			0, screen_info.rows-(HEADER_TOPLINE + 1)-14, screen_info.cols, 14);
-		GrSetGCForeground(cube_gc, BLACK);
+		GrSetGCForeground(cube_gc, GR_RGB(0,0,0));
 		GrLine(temp_pixmap, cube_gc,
 			0, screen_info.rows-(HEADER_TOPLINE + 1)-14,
 			screen_info.cols, screen_info.rows-(HEADER_TOPLINE + 1)-14);
@@ -394,7 +394,7 @@ static void cube_draw(void)
 
 static void cube_clear_screen( void )
 {
-	GrSetGCForeground(cube_gc, WHITE);
+	GrSetGCForeground(cube_gc, GR_RGB(0,0,0));
 	GrFillRect(temp_pixmap, cube_gc,
 		0, 0, screen_info.cols, (screen_info.rows - (HEADER_TOPLINE + 1)));
 }
@@ -550,7 +550,7 @@ void new_cube_window( void )
 
 	cube_gc = pz_get_gc(1);
 	GrSetGCUseBackground(cube_gc, GR_FALSE);
-	GrSetGCForeground(cube_gc, BLACK);
+	GrSetGCForeground(cube_gc, GR_RGB(0,0,0));
 
 	cube_wid = pz_new_window(0, HEADER_TOPLINE + 1, 
 	screen_info.cols, screen_info.rows - (HEADER_TOPLINE + 1), 

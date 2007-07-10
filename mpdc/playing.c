@@ -101,24 +101,24 @@ static void mcp_draw_percent(int per)
 	switch (multibar.state) {
 	case POSITION:
 	case VOLUME:
-		GrSetGCForeground(mcp_gc, GRAY);
+		GrSetGCForeground(mcp_gc, GR_RGB(80,80,80));
 		GrFillRect(mcp_px, mcp_gc, x, y, pw - 2 < w/2 ? pw : pw - 2, h);
-		GrSetGCForeground(mcp_gc, LTGRAY);
+		GrSetGCForeground(mcp_gc, GR_RGB(160,160,160));
 		GrFillRect(mcp_px, mcp_gc, pw + x - 2, y, 2, h);
-		GrSetGCForeground(mcp_gc, WHITE);
+		GrSetGCForeground(mcp_gc, GR_RGB(255,255,255));
 		GrFillRect(mcp_px, mcp_gc, pw+x-2 > x?pw+x: pw+x+2, y, w-pw, h);
 		break;
 	case SEEK:
-		GrSetGCForeground(mcp_gc, WHITE);
+		GrSetGCForeground(mcp_gc, GR_RGB(255,255,255));
 		GrFillRect(mcp_px, mcp_gc, x, y, w, h);
-		GrSetGCForeground(mcp_gc, LTGRAY);
+		GrSetGCForeground(mcp_gc, GR_RGB(160,160,160));
 		GrLine(mcp_px, mcp_gc, x, y + h/2, x + w, y + h/2);
-		GrSetGCForeground(mcp_gc, GRAY);
+		GrSetGCForeground(mcp_gc, GR_RGB(80,80,80));
 		GrFillEllipse(mcp_px, mcp_gc, x + pw, y + h/2, h/4, h/4);
 		break;
 	}
 
-	GrSetGCForeground(mcp_gc, BLACK);
+	GrSetGCForeground(mcp_gc, GR_RGB(0,0,0));
 	GrLine(mcp_px, mcp_gc, x, y - 1, x + w, y - 1);
 	GrLine(mcp_px, mcp_gc, x, y + h, x + w, y + h);
 	GrLine(mcp_px, mcp_gc, x - 1, y, x - 1, y + (h - 1));
@@ -173,10 +173,10 @@ static void mcp_draw_screen()
 	if (!current_song)
 		return;
 
-	GrSetGCForeground(mcp_gc, WHITE);
+	GrSetGCForeground(mcp_gc, GR_RGB(255,255,255));
 	GrFillRect(mcp_px, mcp_gc, 0, 0, screen_info.cols, screen_info.rows);
 
-	GrSetGCForeground(mcp_gc, BLACK);
+	GrSetGCForeground(mcp_gc, GR_RGB(0,0,0));
 
 	posmod = (screen_info.rows - (HEADER_TOPLINE + 30))
 		/ ((current_song->artist ? 1: 0)
@@ -203,7 +203,7 @@ static void mcp_draw_screen()
 	else
 		mcp_place_text(current_song->file, posmod, ++i);
 	GrCopyArea(mcp_wid, mcp_gc, 0, 0, screen_info.cols, screen_info.rows -
-			(HEADER_TOPLINE + 1), mcp_px, 0, 0, MWROP_USE_GC_MODE);
+			(HEADER_TOPLINE + 1), mcp_px, 0, 0, 0);
 
 }
 

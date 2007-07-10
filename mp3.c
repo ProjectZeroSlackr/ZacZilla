@@ -15,18 +15,6 @@
  * along with this program; if not, write to the Free Software Foundation,
  * Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
-
-#if 1
-#include "pz.h"
-void new_mp3_window(char *filename, char *album, char *artist, char *title, int len)
-{
-    pz_error ("MP3 playback not supported in this build");
-}
-int is_mp3_type (char *ext) 
-{ return strcasecmp (ext, ".mp3") == 0; }
-#else
-
-
 #ifdef IPOD
 #define USE_LIBINTEL
 #else
@@ -96,9 +84,9 @@ static void draw_bar(int bar_length)
 {
 	if (!(bar_length < 0 || bar_length > rect_x2-rect_x1-4) ) {
 		GrFillRect (mp3_wid, mp3_gc, rect_x1 + 2, rect_y1+2, bar_length, rect_y2-rect_y1-4);
-		GrSetGCForeground(mp3_gc, WHITE);
+		GrSetGCForeground(mp3_gc, GR_RGB(255,255,255));
 		GrFillRect(mp3_wid, mp3_gc, rect_x1 + 2 + bar_length, rect_y1+2, rect_x2-rect_x1-4 - bar_length, rect_y2-rect_y1-4);
-		GrSetGCForeground(mp3_gc, BLACK);
+		GrSetGCForeground(mp3_gc, GR_RGB(0,0,0));
 	}
 }
 
@@ -112,9 +100,9 @@ static void draw_time()
 	elapsed= total_time - remaining_time;
 	bar_length= (elapsed * (rect_x2-rect_x1-4)) / total_time;
 
-	GrSetGCForeground(mp3_gc, WHITE);
+	GrSetGCForeground(mp3_gc, GR_RGB(255,255,255));
 	GrFillRect(mp3_wid, mp3_gc, rect_x1, rect_y1-12, rect_x2-rect_x1+1, 10);
-	GrSetGCForeground(mp3_gc, BLACK);
+	GrSetGCForeground(mp3_gc, GR_RGB(0,0,0));
 
 	GrText(mp3_wid, mp3_gc, rect_x1, rect_y1-2, "0", -1, GR_TFASCII);
 	tot_time = total_time / 1000;
@@ -133,9 +121,9 @@ static void draw_volume()
 	vol = dsp_get_volume(&dspz);
 	bar_length = (vol * (rect_x2-rect_x1-4)) / 100;
 
-	GrSetGCForeground(mp3_gc, WHITE);
+	GrSetGCForeground(mp3_gc, GR_RGB(255,255,255));
 	GrFillRect(mp3_wid, mp3_gc, rect_x1, rect_y1-12, rect_x2-rect_x1+1, 10);
-	GrSetGCForeground(mp3_gc, BLACK);
+	GrSetGCForeground(mp3_gc, GR_RGB(0,0,0));
 
 	GrText(mp3_wid, mp3_gc, rect_x1, rect_y1-2, "0", -1, GR_TFASCII);
 	GrText(mp3_wid, mp3_gc, rect_x2-20, rect_y1-2, "100", -1, GR_TFASCII);
@@ -145,9 +133,9 @@ static void draw_volume()
 
 static void mp3_do_draw()
 {
-	GrSetGCForeground(mp3_gc, WHITE);
+	GrSetGCForeground(mp3_gc, GR_RGB(255,255,255));
 	GrFillRect(mp3_wid, mp3_gc, 0, 0, screen_info.cols, screen_info.rows);
-	GrSetGCForeground(mp3_gc, BLACK);
+	GrSetGCForeground(mp3_gc, GR_RGB(0,0,0));
 
 	GrText(mp3_wid, mp3_gc, 8, 20, current_pos, -1, GR_TFASCII);
 	GrText(mp3_wid, mp3_gc, 8, 34, current_title, -1, GR_TFASCII);
@@ -344,7 +332,7 @@ static void decode_mp3()
 	int dsp_initialised = 0;
 	int nframes = 0;
 
-	InitMP3Decoder(&DecoderState, &bs);
+//	InitMP3Decoder(&DecoderState, &bs);
 
 	mp3_pause = 0;
 	next_song_queued = 0;
@@ -362,7 +350,7 @@ static void decode_mp3()
 			return;
 		}
 		
-		switch (DecodeMP3Frame(&bs, pcm, &DecoderState)) {
+/*		switch (DecodeMP3Frame(&bs, pcm, &DecoderState)) {
 		case MP3_FRAME_COMPLETE:
 			if (!dsp_initialised) {
 				init_dsp(MAX_CHAN, &DecoderState);
@@ -387,7 +375,7 @@ static void decode_mp3()
 			break;
 		case MP3_FRAME_HEADER_INVALID:
 			break;
-		}
+		}*/
 	}
 
 	/* did song finished by itself or was Menu pressed? */
@@ -456,14 +444,26 @@ static void start_mp3_playback(char *filename)
 
 void new_mp3_window(char *filename, char *album, char *artist, char *title, int len)
 {
-	strncpy(current_album, album, sizeof(current_album)-1);
-	current_album[sizeof(current_album)-1] = 0;
+	if (album) {
+		strncpy(current_album, album, sizeof(current_album)-1);
+		current_album[sizeof(current_album)-1] = 0;
+	}
+	else
+		current_album[0]=0;
 
-	strncpy(current_artist, artist, sizeof(current_artist)-1);
-	current_artist[sizeof(current_artist)-1] = 0;
+	if (artist) {
+		strncpy(current_artist, artist, sizeof(current_artist)-1);
+		current_artist[sizeof(current_artist)-1] = 0;
+	} else {
+		current_artist[0]=0;
+	}
 
-	strncpy(current_title, title, sizeof(current_title)-1);
-	current_title[sizeof(current_title)-1] = 0;
+	if (title) {
+		strncpy(current_title, title, sizeof(current_title)-1);
+		current_title[sizeof(current_title)-1] = 0;
+	} else {
+		current_title[0]=0;
+	}
 
 	sprintf(current_pos, _("Song %d of %d"), playlistpos, playlistlength);
 
@@ -481,8 +481,8 @@ void new_mp3_window(char *filename, char *album, char *artist, char *title, int 
 
 	mp3_gc = pz_get_gc(1);
 	GrSetGCUseBackground(mp3_gc, GR_TRUE);
-	GrSetGCBackground(mp3_gc, WHITE);
-	GrSetGCForeground(mp3_gc, BLACK);
+	GrSetGCBackground(mp3_gc, GR_RGB(255,255,255));
+	GrSetGCForeground(mp3_gc, GR_RGB(0,0,0));
 
 	mp3_wid = pz_new_window(0, HEADER_TOPLINE + 1, screen_info.cols, screen_info.rows - (HEADER_TOPLINE + 1), mp3_do_draw, mp3_do_keystroke);
 
@@ -495,5 +495,3 @@ void new_mp3_window(char *filename, char *album, char *artist, char *title, int 
 	start_mp3_playback(filename);
 	window_open = 0;
 }
-
-#endif

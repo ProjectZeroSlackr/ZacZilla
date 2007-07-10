@@ -146,8 +146,8 @@ void draw_message(char *msg1, char *msg2)
 	GrClearWindow(message_wid, GR_FALSE);
 
 	/* Put the foreground and background in good shapes */
-	GrSetGCForeground(tuxchess_gc, BLACK);
-	GrSetGCBackground(tuxchess_gc, WHITE);
+	GrSetGCForeground(tuxchess_gc, GR_RGB(0,0,0));
+	GrSetGCBackground(tuxchess_gc, GR_RGB(255,255,255));
 
 	/* Draw the "window" */
 	GrLine(message_wid, tuxchess_gc, 1, 0, 34, 0);
@@ -192,8 +192,8 @@ void draw_historic(void)
 	GrClearWindow (historic_wid, GR_FALSE);
 
 	/* Put the foreground and background in good shapes */
-	GrSetGCForeground(tuxchess_gc, BLACK);
-	GrSetGCBackground(tuxchess_gc, WHITE);
+	GrSetGCForeground(tuxchess_gc, GR_RGB(0,0,0));
+	GrSetGCBackground(tuxchess_gc, GR_RGB(255,255,255));
 
 	/* Draw the "window" */
 	GrLine(historic_wid, tuxchess_gc, 1, 1, 55, 1);
@@ -560,11 +560,11 @@ void draw_cursor(char coord1, char coord2)
 	x = (coord1-65)*13;
 	y = 106-((coord2-48)*13);
 
-	GrSetGCForeground(tuxchess_gc,WHITE);
+	GrSetGCForeground(tuxchess_gc,GR_RGB(255,255,255));
 	GrRect(tuxchess_wid,tuxchess_gc,x,y,13,13);
-	GrSetGCForeground(tuxchess_gc,BLACK);
+	GrSetGCForeground(tuxchess_gc,GR_RGB(0,0,0));
 	GrRect(tuxchess_wid,tuxchess_gc,x+1,y+1,11,11);
-	GrSetGCForeground(tuxchess_gc,WHITE);
+	GrSetGCForeground(tuxchess_gc,GR_RGB(255,255,255));
 	GrRect(tuxchess_wid,tuxchess_gc,x+2,y+2,9,9);
 }
 
@@ -587,14 +587,14 @@ void draw_rook(int coord_x, int coord_y, char color)
 
 	if(color == 'w')
 	{
-		GrSetGCForeground(tuxchess_gc,WHITE);
+		GrSetGCForeground(tuxchess_gc,GR_RGB(255,255,255));
 		GrFillPoly(tuxchess_wid,tuxchess_gc,21,rook);
-		GrSetGCForeground(tuxchess_gc,BLACK);
+		GrSetGCForeground(tuxchess_gc,GR_RGB(0,0,0));
 		GrPoly(tuxchess_wid,tuxchess_gc,21,rook);
 	}
 	else
 	{
-		GrSetGCForeground(tuxchess_gc,BLACK);
+		GrSetGCForeground(tuxchess_gc,GR_RGB(0,0,0));
 		GrFillPoly(tuxchess_wid,tuxchess_gc,21,rook);
 	}
 }
@@ -611,14 +611,14 @@ void draw_queen(int coord_x, int coord_y, char color)
 
 	if (color == 'w')
 	{
-		GrSetGCForeground(tuxchess_gc,WHITE);
+		GrSetGCForeground(tuxchess_gc,GR_RGB(255,255,255));
 		GrFillPoly(tuxchess_wid,tuxchess_gc,8,queen);
-		GrSetGCForeground(tuxchess_gc,BLACK);
+		GrSetGCForeground(tuxchess_gc,GR_RGB(0,0,0));
 		GrPoly(tuxchess_wid,tuxchess_gc,8,queen);
 	}
 	else
 	{
-		GrSetGCForeground(tuxchess_gc,BLACK);
+		GrSetGCForeground(tuxchess_gc,GR_RGB(0,0,0));
 		GrFillPoly(tuxchess_wid,tuxchess_gc,8,queen);
 		GrPoly(tuxchess_wid,tuxchess_gc,8,queen);
 	}
@@ -637,14 +637,14 @@ void draw_knight(int coord_x, int coord_y, char color)
 
 	if(color == 'w')
 	{
-		GrSetGCForeground(tuxchess_gc,WHITE);
+		GrSetGCForeground(tuxchess_gc,GR_RGB(255,255,255));
 		GrFillPoly(tuxchess_wid,tuxchess_gc,9,knight);
-		GrSetGCForeground(tuxchess_gc,BLACK);
+		GrSetGCForeground(tuxchess_gc,GR_RGB(0,0,0));
 		GrPoly(tuxchess_wid,tuxchess_gc,9,knight);
 	}
 	else 
 	{
-		GrSetGCForeground(tuxchess_gc,BLACK);
+		GrSetGCForeground(tuxchess_gc,GR_RGB(0,0,0));
 		GrFillPoly(tuxchess_wid,tuxchess_gc,9,knight);
 		GrPoly(tuxchess_wid,tuxchess_gc,9,knight);
 	}
@@ -653,14 +653,14 @@ void draw_knight(int coord_x, int coord_y, char color)
 /* Draw the king */
 void draw_king(int coord_x, int coord_y, char color)
 {
-	GrSetGCForeground(tuxchess_gc,BLACK);
+	GrSetGCForeground(tuxchess_gc,GR_RGB(0,0,0));
 	GrLine(tuxchess_wid,tuxchess_gc,coord_x+6,coord_y+1,coord_x+6,coord_y+4);
 	GrLine(tuxchess_wid,tuxchess_gc,coord_x+4,coord_y+2,coord_x+8,coord_y+2);
 	if(color == 'w')
-		GrSetGCForeground(tuxchess_gc,WHITE);
+		GrSetGCForeground(tuxchess_gc,GR_RGB(255,255,255));
 
 	GrFillEllipse(tuxchess_wid,tuxchess_gc,coord_x+6,coord_y+8,4,4);
-	GrSetGCForeground(tuxchess_gc,BLACK);
+	GrSetGCForeground(tuxchess_gc,GR_RGB(0,0,0));
 	GrEllipse(tuxchess_wid,tuxchess_gc,coord_x+6,coord_y+8,4,4);
 }
 
@@ -691,28 +691,28 @@ void draw_bishop(int coord_x, int coord_y, char color)
 
 	if(color == 'w')
 	{
-		GrSetGCForeground(tuxchess_gc,WHITE);
+		GrSetGCForeground(tuxchess_gc,GR_RGB(255,255,255));
 		GrFillPoly(tuxchess_wid,tuxchess_gc,9,bishop2);
 		GrFillPoly(tuxchess_wid,tuxchess_gc,5,bishop3);
-		GrSetGCForeground(tuxchess_gc,BLACK);
+		GrSetGCForeground(tuxchess_gc,GR_RGB(0,0,0));
 		GrPoly(tuxchess_wid,tuxchess_gc,9,bishop2);
 		GrPoly(tuxchess_wid,tuxchess_gc,5,bishop3);
-		GrSetGCForeground(tuxchess_gc,WHITE);
+		GrSetGCForeground(tuxchess_gc,GR_RGB(255,255,255));
 		GrFillPoly(tuxchess_wid,tuxchess_gc,9,bishop1);
-		GrSetGCForeground(tuxchess_gc,BLACK);
+		GrSetGCForeground(tuxchess_gc,GR_RGB(0,0,0));
 		GrPoly(tuxchess_wid,tuxchess_gc,9,bishop1);
 	}
 	else 
 	{
-		GrSetGCForeground(tuxchess_gc,BLACK);
+		GrSetGCForeground(tuxchess_gc,GR_RGB(0,0,0));
 		GrFillPoly(tuxchess_wid,tuxchess_gc,9,bishop2);
 		GrFillPoly(tuxchess_wid,tuxchess_gc,5,bishop3);
-		GrSetGCForeground(tuxchess_gc,LTGRAY);
+		GrSetGCForeground(tuxchess_gc,GR_RGB(160,160,160));
 		GrPoly(tuxchess_wid,tuxchess_gc,9,bishop2);
 		GrPoly(tuxchess_wid,tuxchess_gc,5,bishop3);
-		GrSetGCForeground(tuxchess_gc,BLACK);
+		GrSetGCForeground(tuxchess_gc,GR_RGB(0,0,0));
 		GrFillPoly(tuxchess_wid,tuxchess_gc,9,bishop1);
-		GrSetGCForeground(tuxchess_gc,LTGRAY);
+		GrSetGCForeground(tuxchess_gc,GR_RGB(160,160,160));
 		GrPoly(tuxchess_wid,tuxchess_gc,9,bishop1);
 	}
 }
@@ -722,24 +722,24 @@ void draw_pawn(int coord_x, int coord_y, char color)
 {
 	if(color == 'w')
 	{
-		GrSetGCForeground(tuxchess_gc,WHITE);
+		GrSetGCForeground(tuxchess_gc,GR_RGB(255,255,255));
 		GrFillEllipse(tuxchess_wid,tuxchess_gc,coord_x+6,coord_y+6,2,4);
-		GrSetGCForeground(tuxchess_gc,BLACK);
+		GrSetGCForeground(tuxchess_gc,GR_RGB(0,0,0));
 		GrEllipse(tuxchess_wid,tuxchess_gc,coord_x+6,coord_y+6,2,4);
-		GrSetGCForeground(tuxchess_gc,WHITE);
+		GrSetGCForeground(tuxchess_gc,GR_RGB(255,255,255));
 		GrFillRect(tuxchess_wid,tuxchess_gc,coord_x+3,coord_y+9,7,3);
-		GrSetGCForeground(tuxchess_gc,BLACK);
+		GrSetGCForeground(tuxchess_gc,GR_RGB(0,0,0));
 		GrRect(tuxchess_wid,tuxchess_gc,coord_x+3,coord_y+9,7,3);
 	}
 	else 
 	{
-		GrSetGCForeground(tuxchess_gc,BLACK);
+		GrSetGCForeground(tuxchess_gc,GR_RGB(0,0,0));
 		GrFillEllipse(tuxchess_wid,tuxchess_gc,coord_x+6,coord_y+6,2,4);
-		GrSetGCForeground(tuxchess_gc,LTGRAY);
+		GrSetGCForeground(tuxchess_gc,GR_RGB(160,160,160));
 		GrEllipse(tuxchess_wid,tuxchess_gc,coord_x+6,coord_y+6,2,4);
-		GrSetGCForeground(tuxchess_gc,BLACK);
+		GrSetGCForeground(tuxchess_gc,GR_RGB(0,0,0));
 		GrFillRect(tuxchess_wid,tuxchess_gc,coord_x+3,coord_y+9,7,3);
-		GrSetGCForeground(tuxchess_gc,LTGRAY);
+		GrSetGCForeground(tuxchess_gc,GR_RGB(160,160,160));
 		GrRect(tuxchess_wid,tuxchess_gc,coord_x+3,coord_y+9,7,3);
 	}
 }
@@ -856,8 +856,8 @@ void draw_end(char col)
 		GrMapWindow(end_wid);
 
 		/* Put the foreground and background in good shapes */
-		GrSetGCForeground(tuxchess_gc, BLACK);
-		GrSetGCBackground(tuxchess_gc, WHITE);
+		GrSetGCForeground(tuxchess_gc, GR_RGB(0,0,0));
+		GrSetGCBackground(tuxchess_gc, GR_RGB(255,255,255));
 
 		/* Clear the window */
 		GrClearWindow(end_wid, GR_FALSE);
@@ -1049,7 +1049,7 @@ char *move_str(move_bytes m)
 void print_board()
 {
 	int row,column,i,x,y,x_curs,y_curs,x_curs_old,y_curs_old;
-	static int color_type=1; //gray color
+	static int color_type=1; //GR_RGB(80,80,80) color
 
 	GR_GC_ID tuxchess_gc;
 
@@ -1075,10 +1075,10 @@ void print_board()
 				|| (x_curs_old==column && y_curs_old==7-row)
 				|| (x_curs==column && y_curs==7-row)) {
 				if(color_type==1) {
-					GrSetGCForeground(tuxchess_gc,GRAY);
+					GrSetGCForeground(tuxchess_gc,GR_RGB(80,80,80));
 				}
 				else {
-					GrSetGCForeground(tuxchess_gc,WHITE);
+					GrSetGCForeground(tuxchess_gc,GR_RGB(255,255,255));
 				}
 
 				GrFillRect(tuxchess_wid,tuxchess_gc,0+column*13,2+row*13,13,13);
@@ -1162,22 +1162,22 @@ void print_result()
 	if (i == first_move[1]) {
 		if (in_check(side)) {
 			if (side == LIGHT) {
-				printf("Black mates");
+				printf("GR_RGB(0,0,0) mates");
 				if (is_mini) {
-					draw_message("Black","Mates");
+					draw_message("GR_RGB(0,0,0)","Mates");
 				}
 				else {
-					pz_draw_header("Black mates");
+					pz_draw_header("GR_RGB(0,0,0) mates");
 				}
 				draw_end('b');
 			}
 			else {
-				printf("White mates");
+				printf("GR_RGB(255,255,255) mates");
 				if (is_mini) {
-					draw_message("White","Mates");
+					draw_message("GR_RGB(255,255,255)","Mates");
 				}
 				else {
-					pz_draw_header("White mates");
+					pz_draw_header("GR_RGB(255,255,255) mates");
 				}
 				draw_end('w');
 			}

@@ -255,7 +255,7 @@ draw_headers(void)
 	};
 	
 	for (i = 0; i < 7; i++) {
-		GrSetGCForeground(calendar_gc, BLACK);
+		GrSetGCForeground(calendar_gc, GR_RGB(0,0,0));
 		if (screen_info.cols > 138) {
 		GrBitmap(calendar_wid, calendar_gc, ws, ycalpos-11, 22, 8,
 		         cal_header_font[i]);
@@ -263,7 +263,7 @@ draw_headers(void)
 			GrBitmap(calendar_wid, calendar_gc, ws+clip[i][0],
 			         ycalpos-11, 22, 8,
 			         cal_header_font[i]);
-			GrSetGCForeground(calendar_gc, WHITE);
+			GrSetGCForeground(calendar_gc, GR_RGB(255,255,255));
 			GrFillRect(calendar_wid, calendar_gc, ws+clip[i][0]+clip[i][1],
 			           ycalpos-11, 22-clip[i][1], 8);
 		}
@@ -308,7 +308,7 @@ calendar_draw(int redraw, int last)
 	if(redraw) {
 		clear_calendar();
 
-		GrSetGCForeground(calendar_gc, WHITE);
+		GrSetGCForeground(calendar_gc, GR_RGB(255,255,255));
 		GrFillRect(calendar_wid, calendar_gc, XCALPOS, ycalpos,
 			screen_info.cols - XCALPOS, 2 * WeekSpace);
 
@@ -335,7 +335,7 @@ calendar_draw(int redraw, int last)
 		}
 		islast = (j == shown.mday + last) ? 1 : 0;
 		snprintf(buffer, 4, "%02d", j);
-		GrSetGCForeground(calendar_gc, GRAY);
+		GrSetGCForeground(calendar_gc, GR_RGB(80,80,80));
 		GrLine(calendar_wid, calendar_gc,
 			ws, ycalpos + (row-1) * WeekSpace,
 			ws, ycalpos + row * WeekSpace);
@@ -347,24 +347,24 @@ calendar_draw(int redraw, int last)
 				ws, ycalpos + (row) * WeekSpace,
 				ws + DaySpace, ycalpos + (row) * WeekSpace);
 
-		GrSetGCForeground(calendar_gc, BLACK);
+		GrSetGCForeground(calendar_gc, GR_RGB(0,0,0));
 
 		if (j == shown.mday) {
-			GrSetGCForeground(calendar_gc, BLACK);
+			GrSetGCForeground(calendar_gc, GR_RGB(0,0,0));
 			cal_draw_rect(ws, row);
-			GrSetGCForeground(calendar_gc, WHITE);
+			GrSetGCForeground(calendar_gc, GR_RGB(255,255,255));
 			cal_draw_number(ws + 3, ycalpos + (row-1) * WeekSpace + 3, j);
 		} else if (istoday) {
 			GrSetGCForeground(calendar_gc,
 				(screen_info.bpp == 16)?  
-				GR_RGB( 135, 206, 250 ) : LTGRAY);
+				GR_RGB( 135, 206, 250 ) : GR_RGB(160,160,160));
 			cal_draw_rect(ws, row);
-			GrSetGCForeground(calendar_gc, BLACK);
+			GrSetGCForeground(calendar_gc, GR_RGB(0,0,0));
 			cal_draw_number(ws + 3, ycalpos + (row-1) * WeekSpace + 3, j);
 		} else if (redraw || islast) {
-			GrSetGCForeground(calendar_gc, WHITE);
+			GrSetGCForeground(calendar_gc, GR_RGB(255,255,255));
 			cal_draw_rect(ws, row);
-			GrSetGCForeground(calendar_gc, BLACK);
+			GrSetGCForeground(calendar_gc, GR_RGB(0,0,0));
 			cal_draw_number(ws + 3, ycalpos + (row-1) * WeekSpace + 3, j);
 		}
 		
@@ -374,7 +374,7 @@ calendar_draw(int redraw, int last)
 		ws += DaySpace;
 		pos++;
 		if (pos >= 7 && j != days_per_month) {
-			GrSetGCForeground(calendar_gc, GRAY);
+			GrSetGCForeground(calendar_gc, GR_RGB(80,80,80));
 			GrLine(calendar_wid, calendar_gc,
 				ws, ycalpos + (row-1) * WeekSpace,
 				ws, ycalpos + row * WeekSpace);
@@ -384,7 +384,7 @@ calendar_draw(int redraw, int last)
 		}
 	}
 
-	GrSetGCForeground(calendar_gc, GRAY);
+	GrSetGCForeground(calendar_gc, GR_RGB(80,80,80));
 	GrLine(calendar_wid, calendar_gc,
 		ws, ycalpos + (row-1) * WeekSpace,
 		ws, ycalpos + row * WeekSpace);
@@ -434,7 +434,7 @@ prev_month(struct shown *shown, int step)
 static void
 clear_calendar()
 {
-	GrSetGCForeground(calendar_gc, WHITE);
+	GrSetGCForeground(calendar_gc, GR_RGB(255,255,255));
 	GrFillRect(calendar_wid, calendar_gc, 0, 0, screen_info.cols,
 	           screen_info.rows);
 }
@@ -452,7 +452,7 @@ new_calendar_window(void)
 
 	calendar_gc = pz_get_gc(1);
 	GrSetGCUseBackground(calendar_gc, GR_FALSE);
-	GrSetGCForeground(calendar_gc, BLACK);
+	GrSetGCForeground(calendar_gc, GR_RGB(0,0,0));
 
 	calendar_wid =
 	    pz_new_window(0, HEADER_TOPLINE + 1, screen_info.cols,

@@ -65,7 +65,7 @@ void steroids_ship_init (Steroids_Ship *ship)
 
     // Initialize ship shape object:
     ship->shape.type = STEROIDS_OBJECT_TYPE_POLYGON;
-    ship->shape.colour = BLACK;
+    ship->shape.colour = 0,0,0;
     steroids_polygon_copy (ship->originalShape, &ship->shape.geometry.polygon);
     ship->shape.velocity.x = 0;
     ship->shape.velocity.y = 0;
@@ -143,14 +143,14 @@ void steroids_ship_animate (Steroids_Ship *ship)
 	{
 	    // Re-spawn:
 	    ship->state = STEROIDS_SHIP_STATE_LIVE;
-	    ship->shape.colour = BLACK;
+	    ship->shape.colour = 0,0,0;
 	}
 	else
 	{
 	    // Animate pieces:
 	    if (ship->dieTime % 2 == 0)
 	    {
-		ship->shape.colour = (ship->shape.colour == BLACK) ? LTGRAY : BLACK;
+		ship->shape.colour = (ship->shape.colour == 0,0,0) ? GR_RGB(160,160,160) : 0,0,0;
 	    }
 	}
 	break;
@@ -310,7 +310,7 @@ void steroids_ship_drawWin (int x, int y, GR_WINDOW_ID wid, GR_GC_ID gc)
 	point[i].x = shipPoint[i].x + x;
 	point[i].y = shipPoint[i].y + y;
     }
-    GrSetGCForeground (gc, BLACK);
+    GrSetGCForeground (gc, GR_RGB(0,0,0));
     GrPoly (wid, gc, shipNPoints, point);
 }
 

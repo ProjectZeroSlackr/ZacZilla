@@ -147,7 +147,7 @@ void battery_draw_digit (ttk_surface srf, int x, int y, int w, int h, ttk_color 
 	break;
 	
     case '/':
-	ttk_draw_icon (ttk_icon_charging, srf, sx, sy, 0);
+	//ttk_draw_icon (ttk_icon_charging, srf, sx, sy, 0);
 	break;
     case ' ':
 	break;
@@ -193,7 +193,7 @@ void battery_draw (TWidget *this, ttk_surface srf)
 	memcpy (&fill, ttk_ap_getx ("battery.fill.normal"), sizeof(TApItem));
     }
 
-    ttk_draw_icon (ttk_icon_battery, srf, this->x, this->y, (ttk_ap_getx ("battery.border")->color == ttk_makecol (WHITE)));
+//  ttk_draw_icon (ttk_icon_battery, srf, this->x, this->y, (ttk_ap_getx ("battery.border")->color == ttk_makecol (WHITE)));
     ttk_ap_fillrect (srf, ttk_ap_get ("battery.bg"), this->x + 4, this->y + 1, this->x + 20, this->y + 8);
 
     if (fill.type & TTK_AP_SPACING) {
@@ -207,8 +207,8 @@ void battery_draw (TWidget *this, ttk_surface srf)
 			 this->y + 8);
     }
 
-    if (battery_is_charging)
-	ttk_draw_icon (ttk_icon_charging, srf, this->x, this->y, (ttk_ap_getx ("battery.border")->color == ttk_makecol (WHITE)));
+    if (battery_is_charging);
+//	ttk_draw_icon (ttk_icon_charging, srf, this->x, this->y, (ttk_ap_getx ("battery.border")->color == ttk_makecol (WHITE)));
 }
 
 TWidget *new_battery_indicator() 
@@ -311,7 +311,7 @@ void hold_unset (TWidget *this)
 void hold_draw (TWidget *this, ttk_surface srf) 
 {
     if (hold_is_on) {
-	ttk_draw_icon (ttk_icon_hold, srf, this->x + 3, this->y, (ttk_ap_getx ("lock.border")->color == ttk_makecol (WHITE)));
+//	ttk_draw_icon (ttk_icon_hold, srf, this->x + 3, this->y, (ttk_ap_getx ("lock.border")->color == ttk_makecol (WHITE)));
     }
 }
 
@@ -328,7 +328,7 @@ TWidget *new_hold_status_indicator()
 }
 
 #ifdef MPDC
-#error Implement MPD status indicator . . .
+//#error Implement MPD status indicator . . .
 #endif
 
 extern TWindow *pz_last_window;
@@ -568,7 +568,7 @@ void header_init()
 	pz_hwid_pack_left (new_load_average_display());
     
 #ifdef MPDC
-    pz_hwid_pack_left (new_mpdc_status_indicator());
+//    pz_hwid_pack_left (new_mpdc_status_indicator());
 #endif
     pz_hwid_pack_left (new_hold_status_indicator());
     pz_hwid_pack_right (new_battery_indicator());

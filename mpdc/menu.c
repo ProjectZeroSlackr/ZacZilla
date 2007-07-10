@@ -273,6 +273,9 @@ static void mm_scan_level(int level, char *searchstr, int searchIndex)
 				mm_curartist = NULL;
 				searchTable = MPD_TABLE_GENRE;
 			} else {
+				if (mm_curartist != NULL) {
+					free(mm_curartist);
+				}
 				mm_curartist = malloc(strlen(searchstr)+1);
 				memcpy(mm_curartist, searchstr, strlen(searchstr));
 				searchTable = MPD_TABLE_ARTIST; 	
@@ -582,6 +585,9 @@ void new_mm_window(int level, char * search, int searchIndex)
 		memcpy(searchstr, search, strlen(search));
 		searchstr[strlen(search)] = '\0';
 	}
+	if (mm_level_search[level] != NULL) {
+		free(mm_level_search[level]);
+	}
 	mm_level_search[level] = searchstr;
 	mm_gc = pz_get_gc(1);
 	mm_curlevel = level;
@@ -819,7 +825,7 @@ static int mm_fill_albums(char * search, int searchTable)
 	char * album;
 	char is_albums = 0;
 
-	if (mpdc_tickle < 0)
+	if (mpdc_tickle() < 0)
 		return -1;
 	mpd_sendListCommand(mpdz, MPD_TABLE_ALBUM, search);
 	if (mpdz->error) {
@@ -835,9 +841,6 @@ static int mm_fill_albums(char * search, int searchTable)
 
 	mpd_finishCommand(mpdz);
 	if (mpdz->error) {
-		/* it errors out "connection closed" here sometimes, why
-		 * doesn't it do it before it starts listing artists? and why
-		 * doesn't mpdc_tickle() detect a closed connection? */
 		mpdc_tickle();
 		return -1;
 	}
@@ -862,8 +865,7 @@ static int mm_fill_queue(char * search)
 		if (entity.type != MPD_INFO_ENTITY_TYPE_SONG) {
 			continue;
 		}
-		mm_add_item(song->title ? strdup(song->title) :
-				strdup(song->file));
+		mm_add_item(song->title ? song->title : song->file);
 		is_queuing = 1;
 	}
 	mpd_finishCommand(mpdz);
@@ -915,11 +917,11 @@ void mm_queue()
 	mm_startlevel = MM_LEVEL_QUEUE;
 	new_mm_window(mm_startlevel, NULL, -1);
 }
-item_st mpdc_menu[] = {
-	{"Playlists", mm_playlists, ACTION_MENU | ARROW_MENU},
-	{"Artists", mm_artists, ACTION_MENU | ARROW_MENU},
-	{"Albums", mm_albums, ACTION_MENU | ARROW_MENU},
-	{"Songs", mm_songs, ACTION_MENU | ARROW_MENU},
-	{"Queue", mm_queue, ACTION_MENU | ARROW_MENU},
+ttk_menu_item mpdc_menu[] = {
+	{N_("Playlists"),{pz_mh_legacy},TTK_MENU_ICON_SUB, mm_playlists},
+	{N_("Artists"),{pz_mh_legacy},TTK_MENU_ICON_SUB, mm_artists},
+	{N_("Albums"),{pz_mh_legacy},TTK_MENU_ICON_SUB, mm_albums},
+	{N_("Songs"),{pz_mh_legacy},TTK_MENU_ICON_SUB, mm_songs},
+	{N_("Queue"),{pz_mh_legacy},TTK_MENU_ICON_SUB, mm_queue},
 	{0}
 };

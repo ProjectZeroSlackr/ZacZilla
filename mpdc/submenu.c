@@ -66,7 +66,7 @@ static void mms_remove()
 
 static void mms_draw()
 {
-	GrSetGCForeground(mms_gc, BLACK);
+	GrSetGCForeground(mms_gc, GR_RGB(0,0,0));
 	GrRect(mms_wid, mms_gc, 1, 1, mms_ww - 2, mms_wh - 2);
 }
 

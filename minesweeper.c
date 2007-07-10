@@ -222,7 +222,7 @@ static void mines_draw_grid(void)
 {
 	int i;
 	
-	GrSetGCForeground(mines_gc, GRAY);
+	GrSetGCForeground(mines_gc, GR_RGB(80,80,80));
 	for (i = mf->y_offset; i <= mf->y_offset + (mf->sq_size * mf->height);
 	     i += mf->sq_size) {
 		GrLine(mines_wid, mines_gc, mf->x_offset, i,
@@ -252,9 +252,9 @@ static void mines_draw_xor(const int x, const int y)
 {
 	GrSetGCMode(mines_gc, GR_MODE_XOR);
 	if (hw_version == 0 || (hw_version >= 60000 && hw_version < 70000))
-		GrSetGCForeground(mines_gc, WHITE);
+		GrSetGCForeground(mines_gc, GR_RGB(255,255,255));
 	else
-		GrSetGCForeground(mines_gc, BLACK);
+		GrSetGCForeground(mines_gc, GR_RGB(0,0,0));
 	mines_draw_clear(x, y);
 	GrSetGCMode(mines_gc, GR_MODE_SET);
 }
@@ -264,9 +264,9 @@ static void mines_draw_unknown(const int x, const int y)
 	int x_centre = mf->x_offset + (x * mf->sq_size) + (mf->sq_size / 2);
 	int y_centre = mf->y_offset + (y * mf->sq_size) + (mf->sq_size / 2);
 	
-	GrSetGCForeground(mines_gc, WHITE);
+	GrSetGCForeground(mines_gc, GR_RGB(255,255,255));
 	mines_draw_clear(x, y);
-	GrSetGCForeground(mines_gc, LTGRAY);
+	GrSetGCForeground(mines_gc, GR_RGB(160,160,160));
 	GrFillEllipse(mines_wid, mines_gc, x_centre, y_centre,
 	              mf->sq_size / 6, mf->sq_size / 6);
 }
@@ -277,20 +277,20 @@ static void mines_draw_mine(const int x, const int y)
 	int y_centre = mf->y_offset + (y * mf->sq_size) + (mf->sq_size / 2);
 	GR_COLOR colour;
 
-	GrSetGCForeground(mines_gc, WHITE);
+	GrSetGCForeground(mines_gc, GR_RGB(255,255,255));
 	mines_draw_clear(x, y);
-	colour = PHOTO ? GREEN : GRAY;
+	colour = PHOTO ? GR_RGB(0,255,0) : GR_RGB(80,80,80);
 	GrSetGCForeground(mines_gc, colour);
 	GrFillEllipse(mines_wid, mines_gc, x_centre, y_centre,
 	              mf->sq_size / 3, mf->sq_size / 3);
-	GrSetGCForeground(mines_gc, BLACK);
+	GrSetGCForeground(mines_gc, GR_RGB(0,0,0));
 	GrEllipse(mines_wid, mines_gc, x_centre, y_centre,
 	          mf->sq_size / 3, mf->sq_size / 3);
-	colour = PHOTO ? LTGREEN : LTGRAY;
+	colour = PHOTO ? GR_RGB(0,255,0) : GR_RGB(160,160,160);
 	GrSetGCForeground(mines_gc, colour);
 	GrFillEllipse(mines_wid, mines_gc, x_centre, y_centre,
                   mf->sq_size / 6, mf->sq_size / 6);
-	GrSetGCForeground(mines_gc, BLACK);
+	GrSetGCForeground(mines_gc, GR_RGB(0,0,0));
 	GrEllipse(mines_wid, mines_gc, x_centre, y_centre,
 	          mf->sq_size / 6, mf->sq_size / 6);
 }
@@ -310,13 +310,13 @@ static void mines_draw_flag(const int x, const int y)
 		         (mf->height * mf->sq_size))) / 2) - (mf->sq_size / 2);
 	}
 	
-	GrSetGCForeground(mines_gc, WHITE);
+	GrSetGCForeground(mines_gc, GR_RGB(255,255,255));
 	mines_draw_clear(x, y);
-	colour = PHOTO ? LTBLUE : LTGRAY;
+	colour = PHOTO ? GR_RGB(0,0,200) : GR_RGB(160,160,160);
 	GrSetGCForeground(mines_gc, colour);
 	GrFillRect(mines_wid, mines_gc, pole_x, pole_top_y,
 	           (4 * indent), (3 * indent));
-	GrSetGCForeground(mines_gc, BLACK);
+	GrSetGCForeground(mines_gc, GR_RGB(0,0,0));
 	GrRect(mines_wid, mines_gc, pole_x, pole_top_y, (4 * indent), (3 * indent));
 	GrLine(mines_wid, mines_gc, pole_x, pole_top_y, pole_x, pole_bottom_y);
 }
@@ -335,9 +335,9 @@ static void mines_draw_number(const int x, const int y, const int number)
 	snprintf(buf, 3, "%d", number);
 	GrGetGCTextSize(mines_gc, buf, -1, GR_TFASCII|GR_TFTOP,
 	                &width, &height, &base);
-	GrSetGCForeground(mines_gc, WHITE);
+	GrSetGCForeground(mines_gc, GR_RGB(255,255,255));
 	mines_draw_clear(x, y);
-	GrSetGCForeground(mines_gc, BLACK);
+	GrSetGCForeground(mines_gc, GR_RGB(0,0,0));
 	GrText(mines_wid, mines_gc,
            mf->x_offset + (x * mf->sq_size) + ((mf->sq_size - width) / 2),
            mf->y_offset + (y * mf->sq_size) + ((mf->sq_size - height) / 2)
@@ -425,7 +425,7 @@ static void mines_redraw(void)
 				if (mf->grid[x][y].mines > 0) {
 					mines_draw_number(x, y, mf->grid[x][y].mines);
 				} else {
-					GrSetGCForeground(mines_gc, WHITE);
+					GrSetGCForeground(mines_gc, GR_RGB(255,255,255));
 					mines_draw_clear(x, y);
 				}
 			} else if (mf->grid[x][y].flags & FLAGGED) {
@@ -459,7 +459,7 @@ static void mines_uncover_boundary(const int x, const int y);
 static void mines_clear_path(const int x, const int y)
 {
 	mf->grid[x][y].flags |= UNCOVERED;
-	GrSetGCForeground(mines_gc, WHITE);
+	GrSetGCForeground(mines_gc, GR_RGB(255,255,255));
 	mines_draw_clear(x, y);
 	
 	mines_uncover_boundary(x, y);
@@ -518,7 +518,7 @@ static void mines_game_over(void)
 	switch (state) {
 		case GAMEWON:
 			GrClearWindow(mines_wid, GR_FALSE);
-			colour = PHOTO ? RED : BLACK;
+			colour = PHOTO ? GR_RGB(255,0,0) : GR_RGB(0,0,0);
 			GrSetGCForeground(mines_gc, colour);
 			GrGetGCTextSize(mines_gc, winner_text, -1, GR_TFASCII|GR_TFTOP,
 			                &width, &height, &base);
@@ -541,7 +541,7 @@ static void mines_game_over(void)
 				           (mines_info.width / 2) - (width / 2) - 2,
 				           (mines_info.height / 2) - (3 * height) - 2,
 				           width + 4, height + 4);
-				GrSetGCForeground(mines_gc, WHITE);
+				GrSetGCForeground(mines_gc, GR_RGB(255,255,255));
 				GrText(mines_wid, mines_gc,
 				       (mines_info.width / 2) - (width / 2),
 				       (mines_info.height / 2)  - (3 * height),
@@ -562,12 +562,12 @@ static void mines_explode(const int x, const int y)
 	int i = 1;
 	GR_COLOR colour;
 
-	GrSetGCForeground(mines_gc, GRAY);
+	GrSetGCForeground(mines_gc, GR_RGB(80,80,80));
 	while (i < (mines_info.width / 2)) {
 		if (i % 2) {
-			colour = PHOTO ? YELLOW : GRAY;
+			colour = PHOTO ? GR_RGB(75,100,0) : GR_RGB(80,80,80);
 		} else {
-			colour = PHOTO ? RED : BLACK;
+			colour = PHOTO ? GR_RGB(255,0,0) : GR_RGB(0,0,0);
 		}
 		GrSetGCForeground(mines_gc, colour); 
 		GrEllipse(mines_wid, mines_gc, x_centre, y_centre, i, i);
@@ -681,7 +681,7 @@ static void mines_toggle_pause(void)
 		GrClearWindow(mines_wid, GR_FALSE);
 		GrGetGCTextSize(mines_gc, pause_text, -1, GR_TFASCII|GR_TFTOP,
 		                &width, &height, &base);
-		GrSetGCForeground(mines_gc, BLACK);
+		GrSetGCForeground(mines_gc, GR_RGB(0,0,0));
 		GrText(mines_wid, mines_gc,
 		       (mines_info.width / 2) - (width / 2),
 		       (mines_info.height / 2) - (height / 2),

@@ -22,17 +22,19 @@
 
 #include "pz.h"
 #include "ipod.h"
-
+TWindow *ret;
+int curvespeed;
+int curveplay;
 extern void new_contrast_window(void);
 extern void new_browser_window(void);
 extern void toggle_backlight(void);
 extern void set_wheeldebounce(void);
 extern void set_buttondebounce(void);
 #ifdef __linux__
-extern void new_record_mic_window(void);
+/*extern void new_record_mic_window(void);
 extern void new_record_line_in_window(void);
 extern void new_playback_browse_window(void);
-#endif /* __linux__ */
+*/#endif /* __linux__ */
 extern void new_calendar_window(void);
 extern void new_clock_window(void);
 extern void new_world_clock_window(void);
@@ -41,7 +43,6 @@ extern void new_Set_DateTime_window(void);
 extern void new_oth_window(void);
 extern void new_steroids_window(void);
 extern void new_bluecube_window(void);
-extern void new_mandel_window(void);
 #ifndef MPDC
 extern void new_itunes_track(void);
 extern void new_itunes_artist(void);
@@ -61,47 +62,124 @@ extern void new_cube_window(void);
 extern void new_matrix_window(void);
 extern void new_ipobble_window(void);
 extern void new_invaders_window(void);
+extern void new_chopper_window(void);
 extern TWindow *new_font_window(ttk_menu_item *);
 extern void new_vortex_window(void);
-extern void new_wumpus_window(void);
-extern TWindow *about_podzilla(ttk_menu_item *);
+extern void browser_ps2(void);
+
+
+extern void new_kaboom_window(void);
+extern void new_periodic_window(void);
+extern void new_blackjack_window(void);
+extern void new_credits_window(void);
+extern TWindow *new_factor_window(void);
+extern void new_sudoku_window(void);
+extern void new_memoryg_window(void);
+
+//MODULES:
+
+extern TWindow *new_plasma_window(void);
+//extern void new_podwrite_window(void);
+extern TWindow *new_starfield_window(void);
+extern TWindow *new_about_window();
 extern TWindow *show_credits(ttk_menu_item *);
+extern TWindow *mystify_new_window(void);
+extern TWindow *capture_start(void);
+extern TWindow *new_1dtetris_window(void);
+extern TWindow *new_chopper2_window(void);
+extern TWindow *new_chopper2_highscore(void);
+extern TWindow *new_brickm_window(void);
+extern TWindow *new_bridget_window(void);
+extern TWindow *new_connect4_window(void);
+extern TWindow *new_craps_window(void);
+extern TWindow *new_colormixer_window(void);
+extern TWindow *new_duckhunt_window(void);
+extern TWindow *new_duckhuntHS_window(void);
+extern TWindow *new_invaders2_window(void);
+extern TWindow *new_reflex_window(void);
+//extern TWIndow *new_curve_window(void);
+extern TWindow *new_ouch_window(void);
+extern TWindow *new_deal_window(void);
+extern TWindow *wumpus_new_game(void);
+extern TWindow *iconui_new_menu_window(void);
+extern TWindow *new_izilla_window(void);
+extern TWindow *new_usvsthem_window(void);
+extern TWindow *new_piezomaker(void);
+extern TWindow *new_avalanche_window(void);
+extern TWindow * new_podwrite_window(void);
+extern TWindow *new_iracer_window(void);
+extern TWindow * new_terminal_window(void);
+extern TWindow *new_e3d_window(void);
 #ifdef MIKMOD
 extern void new_mikmod_window(void);
 #endif
 #ifdef MPDC
 extern void mpd_currently_playing(void);
-
+extern void settxt(int set);
 extern ttk_menu_item mpdc_menu[];
 #endif /* MPDC */
 extern ttk_menu_item lights_menu[];
-
 extern void quit_podzilla(void);
 extern void poweroff_ipod(void);
 extern void reboot_ipod(void);
-
+#include "ipod.h"
 #define ACTION_MENU      0
 #define SUB_MENU_HEADER  TTK_MENU_ICON_SUB
-
+#define MENU_SETTING(c,s) .choices=c, .cdata=s, .choicechanged=menu_set_setting, .choiceget=menu_get_setting
+#define MENU_BOOL(s) .choices=boolean_options, .cdata=s, .choicechanged=menu_set_setting, .choiceget=menu_get_setting
 static ttk_menu_item tuxchess_menu[] = {
 	{N_("Last Game"), {pz_mh_legacy}, 0, last_tuxchess_window},
 	{N_("New Game"), {pz_mh_legacy}, 0, new_tuxchess_window},
 	{0}
 };
 
+static ttk_menu_item duckhunt_menu[]={
+  {N_("Start Game"),{pz_mh_legacy},0,new_duckhunt_window},
+  {N_("High Scores"),{pz_mh_legacy},0,new_duckhuntHS_window},
+  {0}
+};
+
+static ttk_menu_item chopper_menu[]={
+  {N_("Start Game"),{pz_mh_legacy},0,new_chopper2_window},
+  {N_("High Scores"),{pz_mh_legacy},0,new_chopper2_highscore},
+  {0}
+};
+
+//static ttk_menu_item curve_menu[]={
+ // {N_("Start Game"),{pz_mh_legacy},0,new_curve_window},
+ // {N_("1 Player"),{pz_mh_legacy},0,curve1play},
+ // {N
 static ttk_menu_item games_menu[] = {
+	{N_("1D Tetris"),{pz_mh_legacy},0,new_1dtetris_window},
+	{N_("Avalanche"),{pz_mh_legacy},0,new_avalanche_window},
+	{N_("BlackJack"), {pz_mh_legacy}, 0, new_blackjack_window},
 	{N_("BlueCube"), {pz_mh_legacy}, 0, new_bluecube_window},
-	{N_("Hunt The Wumpus"), {pz_mh_legacy}, 0, new_wumpus_window},
+	{N_("BrickMania"), {pz_mh_legacy},0,new_brickm_window},
+	{N_("Bridget"),{pz_mh_legacy},0,new_bridget_window},
+	{N_("Chopper"), {ttk_mh_sub}, TTK_MENU_ICON_SUB, chopper_menu},
+	{N_("Connect 4"),{pz_mh_legacy},0,new_connect4_window},
+	{N_("Craps"),{pz_mh_legacy},0,new_craps_window},
+//	{N_("Curve"),{ttk_mh_sub},TTK_MENU_ICON_SUB,curve_menu},
+	{N_("Duckhunt"),{ttk_mh_sub},TTK_MENU_ICON_SUB,duckhunt_menu},
+	{N_("Hunt The Wumpus"), {pz_mh_legacy}, 0, wumpus_new_game},
+	{N_("iDeal or No Deal"),{pz_mh_legacy},0,new_deal_window},
 	{N_("Invaders"), {pz_mh_legacy}, 0, new_invaders_window},
+	{N_("Invaders2"), {pz_mh_legacy}, 0, new_invaders2_window},
 	{N_("iPobble"), {pz_mh_legacy}, 0, new_ipobble_window},
+	{N_("iPod Racer"), {pz_mh_legacy}, 0, new_iracer_window},
+	{N_("Kaboom!"), {pz_mh_legacy}, 0, new_kaboom_window},
 	{N_("Lights"), {ttk_mh_sub}, TTK_MENU_ICON_SUB, lights_menu},
+	{N_("Memory"),{pz_mh_legacy},0,new_memoryg_window},
 	{N_("Minesweeper"), {pz_mh_legacy}, 0, new_mines_window},
 	{N_("Othello"), {pz_mh_legacy}, 0, new_oth_window},
 	{N_("Pong"), {pz_mh_legacy}, 0, new_pong_window},
+	{N_("Reflex"),{pz_mh_legacy},0,new_reflex_window},
 	{N_("Steroids"), {pz_mh_legacy}, 0, new_steroids_window},
+	{N_("Sudoku"), {pz_mh_legacy}, 0, new_sudoku_window},
 	{N_("Tic-Tac-Toe"), {pz_mh_legacy}, 0, new_tictactoe_window},
 	{N_("Tunnel"), {pz_mh_legacy}, 0, new_tunnel_window},
 	{N_("TuxChess"), {ttk_mh_sub}, TTK_MENU_ICON_SUB, tuxchess_menu},
+	{N_("Us Vs Them Demo"),{pz_mh_legacy},0,new_usvsthem_window},
 	{N_("Vortex Demo"), {pz_mh_legacy}, 0, new_vortex_window},
 	{0}
 };
@@ -109,9 +187,25 @@ static ttk_menu_item games_menu[] = {
 static ttk_menu_item stuff_menu[] = {
 	{N_("Cube"), {pz_mh_legacy}, 0, new_cube_window},
 	{N_("Dialer"), {pz_mh_legacy}, 0, new_dialer_window},
-	{N_("MandelPod"), {pz_mh_legacy}, 0, new_mandel_window},
+	{N_("Engine 3D"), {pz_mh_legacy}, 0, new_e3d_window},
+	{N_("Factor"), {pz_mh_legacy}, 0, new_factor_window},
 	{N_("Matrix"), {pz_mh_legacy}, 0, new_matrix_window},
+	{N_("Mystify"),{pz_mh_legacy},0,mystify_new_window},
+	{N_("Plasma"), {pz_mh_legacy}, 0, new_plasma_window},
+	{N_("StarField"),{pz_mh_legacy},0,new_starfield_window},
+	{0}
+};
+
+static ttk_menu_item apps_menu[] = {
+	{N_("Calendar"), {pz_mh_legacy}, 0, new_calendar_window},
+	{N_("Calculator"), {pz_mh_legacy}, 0, new_calc_window},
+	{N_("ColorMixer"),{pz_mh_legacy},0,new_colormixer_window},
+	{N_("Periodic table"), {pz_mh_legacy}, 0, new_periodic_window},
+	{N_("Piezo Maker"), {pz_mh_legacy}, 0, new_piezomaker},
 	{N_("PodDraw"), {pz_mh_legacy}, 0, new_poddraw_window},
+	{N_("PodWrite"), {pz_mh_legacy}, 0, new_podwrite_window},
+	{N_("Terminal"), {pz_mh_legacy}, 0, new_terminal_window},
+	//{N_("Screen Capture"),{pz_mh_legacy},0,capture_start},
 	{0}
 };
 
@@ -136,8 +230,7 @@ static const char *boolean_options[] = {
     N_("Off"), N_("On"), 0
 };
 
-#define MENU_SETTING(c,s) .choices=c, .cdata=s, .choicechanged=menu_set_setting, .choiceget=menu_get_setting
-#define MENU_BOOL(s) .choices=boolean_options, .cdata=s, .choicechanged=menu_set_setting, .choiceget=menu_get_setting
+
 static void menu_set_setting (ttk_menu_item *item, int cdata) 
 {
     ipod_set_setting (cdata, item->choice);
@@ -154,10 +247,10 @@ static int menu_get_setting (ttk_menu_item *item, int cdata)
 
 static ttk_menu_item recording_menu[] = {
 #ifdef __linux__
-	{N_("Mic Record"), {pz_mh_legacy}, 0, new_record_mic_window},
+/*	{N_("Mic Record"), {pz_mh_legacy}, 0, new_record_mic_window},
 	{N_("Line In Record"), {pz_mh_legacy}, 0, new_record_line_in_window},
 	{N_("Playback"), {pz_mh_legacy}, 0, new_playback_browse_window},
-#endif /* __linux__ */
+*/#endif /* __linux__ */
 	{N_("Sample Rate"), MENU_SETTING (sample_rates, DSPFREQUENCY)},
 	{0}
 };
@@ -175,19 +268,18 @@ static ttk_menu_item world_clock_menu[] = {
 
 static ttk_menu_item extras_menu[] = {
 	{N_("Recordings"), {ttk_mh_sub}, TTK_MENU_ICON_SUB, recording_menu},
-	{N_("Calendar"), {pz_mh_legacy}, 0, new_calendar_window},
-	{N_("Calculator"), {pz_mh_legacy}, 0, new_calc_window},
 	{N_("Clock"), {ttk_mh_sub}, TTK_MENU_ICON_SUB, world_clock_menu},
-	{N_("Games"), {ttk_mh_sub}, TTK_MENU_ICON_SUB, games_menu},
 	{N_("Stuff"), {ttk_mh_sub}, TTK_MENU_ICON_SUB, stuff_menu},
+	{N_("Games"), {ttk_mh_sub}, TTK_MENU_ICON_SUB, games_menu},
+	{N_("Apps"), {ttk_mh_sub}, TTK_MENU_ICON_SUB, apps_menu},
 	{0}
 };
 
 static TWindow *menu_reset_settings (ttk_menu_item *item) { ipod_reset_settings(); return TTK_MENU_UPONE; }
 
 static ttk_menu_item reset_menu[] = {
-	{N_("Cancel"), { .sub = (TWindow *)TTK_MENU_UPONE }, TTK_MENU_MADESUB},
-	{N_("Absolutely"), {menu_reset_settings}, TTK_MENU_ICON_EXE, 0},
+	{N_("No"), { .sub = (TWindow *)TTK_MENU_UPONE }, TTK_MENU_MADESUB},
+	{N_("Yes"), {menu_reset_settings}, TTK_MENU_ICON_EXE, 0},
 	{0}
 };
 
@@ -209,8 +301,10 @@ static ttk_menu_item clocks_menu[] = {
         { 0 }
 };
 
-static const char * transit_options[] = { N_("Off"), N_("Slow"), N_("Fast"), 0 };
 
+static const char * transit_options[] = { N_("Off"), N_("Slow"), N_("Fast"), N_("Video Fast"), 0 };
+static const char * icon_settings[] = {"Off", "Small List", "Large List", "Small Array", "Large Array", "Small Dock", "Magnifying Dock", "Large Dock", 0};
+static const char * iconc[] = {"Off", "On", 0};
 static ttk_menu_item appearance_menu[] = {
 	{N_("Color Scheme"), {appearance_select_color_scheme} },
      	{N_("Decorations"), MENU_SETTING (appearance_decorations, DECORATIONS) },
@@ -218,22 +312,40 @@ static ttk_menu_item appearance_menu[] = {
 	{N_("Display Load Average"), MENU_BOOL (DISPLAY_LOAD) },
 	{N_("Menu Transition"), MENU_SETTING (transit_options, SLIDE_TRANSIT) },
 	{N_("Font"), {new_font_window}, TTK_MENU_ICON_SUB},
+	{N_("Icon Style"),MENU_SETTING(icon_settings,51)},
+	{N_("Icon Cache"),MENU_SETTING(iconc,52)},
 	{ 0 }
 };
+extern TWindow * ti_ttkselect0(ttk_menu_item * item);
+extern TWindow * ti_ttkselect1(ttk_menu_item * item);
+extern TWindow * ti_ttkselect2(ttk_menu_item * item);
 
+static ttk_menu_item txtin_menu[] = {
+  {N_("Serial"),{ti_ttkselect0}},
+  {N_("Scroll Through"),{ti_ttkselect1}},
+  {N_("TUP"),{ti_ttkselect2}},
+  {0}
+};
+extern TWindow *new_standard_text_demo_window();
+static const char *txtin_options[] = {
+	N_("Off"), N_("Serial"), N_("Scroll Through"), N_("On Screen Keybaord"), N_("Morse Code"),
+	N_("Cursive"), N_("WheelBoard"), N_("4-Button Keyboard"), N_("Dial Type"),N_("Telephone Keypad (4g+)"),N_("ThumbScript (4g+)"),
+	N_("4-Button Telephone Keypad"), 0
+};
+extern TWindow * new_run_window();
 static ttk_menu_item settings_menu[] = {
-	{N_("About"), {about_podzilla}},
-	{N_("Credits"), {show_credits}},
+	{N_("About"), {pz_mh_legacy},0,new_about_window},
+	{N_("Credits"), {pz_mh_legacy}, 0, new_credits_window},
 	{N_("Date & Time"), {ttk_mh_sub}, TTK_MENU_ICON_SUB, clocks_menu},
 	{N_("Repeat"), MENU_SETTING (repeat_options, REPEAT)},
 	{N_("Shuffle"), MENU_SETTING (shuffle_options, SHUFFLE)},
 	{N_("Contrast"), {pz_mh_legacy}, 0, set_contrast},
 	{N_("Wheel Sensitivity"), {pz_mh_legacy}, 0, set_wheeldebounce},
-	// TTK does button debouncing for you.
-	//	{N_("Button Debounce"), {pz_mh_legacy}, 0, set_buttondebounce},
 	{N_("Backlight Timer"), MENU_SETTING (backlight_options, BACKLIGHT_TIMER)},
 	{N_("Clicker"), MENU_BOOL (CLICKER)},
 	{N_("Appearance"), {ttk_mh_sub}, TTK_MENU_ICON_SUB, appearance_menu},
+	{N_("Text Input"),{ttk_mh_sub},TTK_MENU_ICON_SUB,txtin_menu},
+	{N_("Text Input Test"),{pz_mh_legacy},0,new_standard_text_demo_window},
 	{N_("Browser Path Display"), MENU_BOOL (BROWSER_PATH)},
 	{N_("Show Hidden Files"), MENU_BOOL (BROWSER_HIDDEN)},
 	{N_("Exit Without Saving"), {.sub=TTK_MENU_UPONE}, TTK_MENU_MADESUB},
@@ -242,14 +354,14 @@ static ttk_menu_item settings_menu[] = {
 };
 
 static ttk_menu_item reboot_menu[] = {
-	{N_("Cancel"), { .sub = (TWindow *)TTK_MENU_UPONE }},
-	{N_("Absolutely"), {pz_mh_legacy}, 0, reboot_ipod},
+	{N_("No"), { .sub = (TWindow *)TTK_MENU_UPONE }},
+	{N_("Yes"), {pz_mh_legacy}, 0, reboot_ipod},
 	{0}
 };
 
 static ttk_menu_item turnoff_menu[] = {
-	{N_("Cancel"), { .sub = (TWindow *)TTK_MENU_UPONE }},
-	{N_("Absolutely"), {pz_mh_legacy}, 0, poweroff_ipod},
+	{N_("No"), { .sub = (TWindow *)TTK_MENU_UPONE }},
+	{N_("Yes"), {pz_mh_legacy}, 0, poweroff_ipod},
 	{0}
 };
 
@@ -267,7 +379,7 @@ static ttk_menu_item itunes_menu[] = {
 #endif /* !MPDC */
 
 static ttk_menu_item power_menu[] = {
-	{N_("Quit Podzilla"), {pz_mh_legacy}, 0, quit_podzilla},
+	{N_("Quit ZacZilla"), {pz_mh_legacy}, 0, quit_podzilla},
 	{N_("Reboot iPod"), {ttk_mh_sub}, 0, reboot_menu},
 #ifdef NEVER /* just to show where this should go */
 	{N_("Sleep iPod"), {pz_mh_legacy}, 0, sleep};
@@ -285,13 +397,13 @@ int settings_button (TWidget *this, int button, int time)
 
 TWindow *pz_settings_sub (ttk_menu_item *item)
 {
-    TWindow *ret = ttk_new_window();
+    TWindow *reet = ttk_new_window();
     TWidget *menu = ttk_new_menu_widget (item->data, ttk_menufont, item->menuwidth, item->menuheight);
-    ttk_window_title (ret, item->name);
-    menu->draw (menu, ret->srf);
+    ttk_window_title (reet, item->name);
+    menu->draw (menu, reet->srf);
     menu->button = settings_button;
-    ttk_add_widget (ret, menu);
-    return ret;
+    ttk_add_widget (reet, menu);
+    return reet;
 }
 
 static ttk_menu_item main_menu[] = {
@@ -305,17 +417,29 @@ static ttk_menu_item main_menu[] = {
 #ifdef MPDC
 	{N_("Now Playing"), {pz_mh_legacy}, 0, mpd_currently_playing},
 #endif /* MPDC */
-	{N_("File Browser"), {pz_mh_legacy}, TTK_MENU_ICON_SUB, new_browser_window},
+	{N_("File Browser"), {pz_mh_legacy},TTK_MENU_ICON_SUB,new_browser_window},
 	{N_("Power"), {ttk_mh_sub}, TTK_MENU_ICON_SUB, power_menu},
+	{N_("Run"),{pz_mh_legacy},0,new_run_window},
+
 	{0}
 };
-
+extern ttk_menu_item empty_menu[];
+TWindow *(*pz_new_menu_window)(TWidget *) = iconui_new_menu_window;
 void new_menu_window()
 {
-    TWindow *ret = ttk_new_window();
+    
+//  TWidget *menu = ttk_new_menu_widget (empty_menu, ttk_menufont, ret->w, ret->h);
+    //ret=ttk_new_window();
+   // TWidget *menu = ttk_new_widget (0,0);
+  //  iconui_menu_append(menu,main_menu+5);
+   //ttk_show_window(pz_new_menu_window(menu));
+  //  //ttk_show_window (pz_new_menu_window(main_menu));
+    ret=ttk_new_window();
     TWidget *menu = ttk_new_menu_widget (main_menu, ttk_menufont, ret->w, ret->h);
     ttk_menu_set_closeable (menu, 0);
     ttk_add_widget (ret, menu);
-    ttk_window_set_title (ret, "ttk-zilla");
+    ttk_window_set_title (ret, "ZacZilla");
     ttk_show_window (ret);
+  
 }
+

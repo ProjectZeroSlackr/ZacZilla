@@ -40,7 +40,7 @@ static GR_GC_ID mandel_gc;
 static GR_WINDOW_INFO wi;
 static	GR_EVENT break_event;
 static GR_TIMER_ID mandel_timer_id;
-static const GR_COLOR gray_palette[] = { GRAY, GRAY, LTGRAY,  WHITE, LTGRAY, LTGRAY, GRAY, BLACK };
+static const GR_COLOR GR_RGB(DKGREY)_palette[] = { GR_RGB(DKGREY), GR_RGB(DKGREY), GR_RGB(GREY),  GR_RGB(WHITE), GR_RGB(GREY), GR_RGB(GREY), GR_RGB(DKGREY), GR_RGB(BLACK) };
 static const GR_COLOR color_palette[] = { 
 	GR_RGB( 255,   0,   0 ),
 	GR_RGB( 255, 128,   0 ),
@@ -176,7 +176,7 @@ static void init_values() {
 
 	active_renderer=0;
 	
-	GrSetGCForeground(mandel_gc, BLACK);
+	GrSetGCForeground(mandel_gc, GR_RGB(BLACK));
 	for (i=0;i<max_depth+1;i++)  {
 		level[i].mandel_buffer = GrNewPixmap(screen_width, screen_height,  NULL);
 		GrFillRect(level[i].mandel_buffer,mandel_gc,0,0,screen_width, screen_height);	
@@ -230,7 +230,7 @@ static void draw_busy_status() {
 // calculate the current mandelbrot set
 static void calculate_mandel()
 {		
-	const GR_COLOR * the_palette = gray_palette;
+	const GR_COLOR * the_palette = GRAY_palette;
 
 	const int sx = screen_width;
 	const int sy = screen_height;
@@ -334,9 +334,9 @@ static void draw_cursor() {
 	GrCopyArea(mandel_wid, mandel_gc, 0, 0,
 			   screen_width, screen_height,
 			   level[current_depth].mandel_buffer, 0, 0, MWROP_SRCCOPY);	
-	GrSetGCForeground(mandel_gc, BLACK);
+	GrSetGCForeground(mandel_gc, GR_RGB(BLACK));
 	GrRect(mandel_wid, mandel_gc, cursor_x*selection_width-1, cursor_y*selection_height-1, selection_width+2, selection_height+2);
-	GrSetGCForeground(mandel_gc, WHITE);
+	GrSetGCForeground(mandel_gc, GR_RGB(WHITE));
 	GrRect(mandel_wid, mandel_gc, cursor_x*selection_width-2, cursor_y*selection_height-2, selection_width+4, selection_height+4);
 }
 
@@ -381,7 +381,7 @@ static void zoom_in() {
 	cursor_x=0;
 	cursor_y=0;
 	
-	GrSetGCForeground(mandel_gc, BLACK);
+	GrSetGCForeground(mandel_gc, GR_RGB(BLACK));
 	GrFillRect(level[current_depth].mandel_buffer,mandel_gc,0,0,screen_width, screen_height);	
 	calculate_mandel();
 }

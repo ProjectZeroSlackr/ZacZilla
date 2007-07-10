@@ -24,6 +24,7 @@
 #endif
 #include <ttk.h>
 #include "appearance.h"
+//#include "vortex\dialog.c"
 
 #define HEADER_TOPLINE 19
 
@@ -32,7 +33,6 @@
 #define KEY_UNUSED   2 // <-+ same
 #define EVENT_UNUSED 2 // <-+ thing
 #define KEY_QUIT     4
-
 #define FONT_HEIGHT 14
 
 /* pz.c */
@@ -46,7 +46,8 @@ void pz_close_window(t_GR_WINDOW_ID wid);
 void pz_event_handler (t_GR_EVENT *ev);
 int pz_new_event_handler (int, int, int);
 TWindow *pz_mh_legacy (ttk_menu_item *);
-
+int readHighScore(char *SAVEFILE);
+void writeHighScore(char *SAVEFILE,int highScore);
 /* header.c */
 void pz_hwid_pack_left (TWidget *wid);
 void pz_hwid_pack_right (TWidget *wid);

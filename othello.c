@@ -48,7 +48,7 @@ static void draw_oth()
 {
 	int i;
 	GrSetGCUseBackground(oth_gc, GR_TRUE);
-	GrSetGCForeground(oth_gc, BLACK);
+	GrSetGCForeground(oth_gc, GR_RGB(0,0,0));
 	for(i = 0; i <= 8; i++) {
 		GrLine(oth_wid, oth_gc, oxoff,
 		       oyoff+(ogs*i), oxoff+(ogs*8), oyoff+(ogs*i));
@@ -56,7 +56,7 @@ static void draw_oth()
 		       oyoff, oxoff+(ogs*i), oyoff+(ogs*8));
 	}
 
-	GrSetGCForeground(oth_gc, BLACK);
+	GrSetGCForeground(oth_gc, GR_RGB(0,0,0));
 	GrSetGCUseBackground(oth_gc, GR_FALSE);
 
 	if(current_oth_item < 0)
@@ -70,7 +70,7 @@ static void draw_oth()
 	lastylocal=oyoff+ogs*(int)(last_current_oth_item/8);
 	GrRect(oth_wid, oth_gc, xlocal+1,ylocal+1, ogs-1,ogs-1);
 
-	GrSetGCForeground(oth_gc, WHITE);
+	GrSetGCForeground(oth_gc, GR_RGB(255,255,255));
 	if(current_oth_item != last_current_oth_item) {
 		GrRect(oth_wid, oth_gc, lastxlocal+1,lastylocal+1, ogs-1,ogs-1);
 		if(status[last_current_oth_item] != 3)
@@ -95,13 +95,13 @@ static void oth_set_piece(int pos, int coloresq)
 		  (oyoff+(ogs/2)) +ogs*(int)(pos/8)}
 	};
 	status[pos] = coloresq;
-	GrSetGCForeground(oth_gc, BLACK);
+	GrSetGCForeground(oth_gc, GR_RGB(0,0,0));
 	if(coloresq==0)
 		GrFillPoly(oth_wid, oth_gc, 5, cheese);
 	else if(coloresq==1) {
-		GrSetGCForeground(oth_gc, WHITE);
+		GrSetGCForeground(oth_gc, GR_RGB(255,255,255));
 		GrFillPoly(oth_wid, oth_gc, 5, cheese);
-		GrSetGCForeground(oth_gc, BLACK);
+		GrSetGCForeground(oth_gc, GR_RGB(0,0,0));
 		GrPoly(oth_wid, oth_gc, 5, cheese);
 	}
 }
@@ -166,9 +166,9 @@ static int endgame(int isOver)
 				break;
 		}
 	}
-	GrSetGCForeground(oth_gc, WHITE);
+	GrSetGCForeground(oth_gc, GR_RGB(255,255,255));
 	GrFillRect(oth_wid, oth_gc, oxoff, oyoff, (ogs*8)+1, (ogs*8)+1);
-	GrSetGCForeground(oth_gc, BLACK);
+	GrSetGCForeground(oth_gc, GR_RGB(0,0,0));
 	sprintf(comp, "Me: %d", computer);
 	sprintf(hum, "You: %d", human);
 	GrText(oth_wid, oth_gc, oxoff, oyoff, comp, -1, GR_TFASCII|GR_TFTOP);
@@ -412,7 +412,7 @@ void new_oth_window()
 
 	oth_gc = pz_get_gc(1);
 	GrSetGCUseBackground(oth_gc, GR_FALSE);
-	GrSetGCForeground(oth_gc, BLACK);
+	GrSetGCForeground(oth_gc, GR_RGB(0,0,0));
 
 	oth_wid = pz_new_window(0, HEADER_TOPLINE + 1, screen_info.cols, screen_info.rows - (HEADER_TOPLINE + 1), oth_do_draw, oth_do_keystroke);
 

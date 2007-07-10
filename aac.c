@@ -18,20 +18,6 @@
  * Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
 
-#if 1
-#include "pz.h"
-void new_aac_window(char *filename, char *album, char *artist, char *title, int len)
-{
-    pz_error ("AAC playback not supported in this build");
-}
-void new_aac_window_get_meta(char *filename)
-{
-    pz_error ("AAC playback not supported in this build");
-}
-int is_aac_type (char *ext) 
-{ return strcasecmp (ext, ".m4a") == 0; }
-#else
-
 #include <sys/types.h>
 #include <sys/wait.h>
 #include <string.h>
@@ -347,7 +333,6 @@ int mp4_to_raw_aac(FILE *infile)
 	if (!mp4file) {
 		free(mp4cb);
 		free(audiobuf);
-		mp4ff_close(mp4file);
 		return -1;
 	}
 
@@ -361,7 +346,8 @@ int mp4_to_raw_aac(FILE *infile)
 	aacbuf = NULL;
 	aacbuf_len = 0;
 	
-	mp4ff_get_decoder_config(mp4file, track, &aacbuf, &aacbuf_len);
+	mp4ff_get_decoder_config(mp4file, track, &aacbuf,
+			(uint32_t *)&aacbuf_len);
 	
 /* decoder config layout:
  *
@@ -410,6 +396,19 @@ int mp4_to_raw_aac(FILE *infile)
 
 	numSamples = mp4ff_num_samples(mp4file, track);
 	samplez = malloc(sizeof(unsigned short) * numSamples);
+	if (samplez == NULL) {
+		pz_draw_header("samplez malloc failed"); sleep(1);
+
+		if (aacbuf != NULL) {
+			free(aacbuf);
+		}
+
+		free(mp4cb);
+		free(audiobuf);
+		mp4ff_close(mp4file);
+
+		return -1;
+	}
 
 	sample_len = (int) (mp4ff_get_track_duration(mp4file, 0) /
 	                    mp4ff_num_samples(mp4file, 0)) 
@@ -421,7 +420,8 @@ int mp4_to_raw_aac(FILE *infile)
 	
 	for (sampleId = 0; sampleId < numSamples; sampleId++) {
 		int rc;
-		rc = mp4ff_read_sample(mp4file, track, sampleId, &aacbuf, &aacbuf_len);
+		rc = mp4ff_read_sample(mp4file, track, sampleId, &aacbuf,
+				(uint32_t *)&aacbuf_len);
 		if (rc == 0) {
 			if (aacbuf)
 				free(aacbuf);
@@ -644,14 +644,26 @@ static void start_aac_playback(char *filename)
 void new_aac_window(char *filename, char *album, char *artist, char *title, long len)
 {
 #ifdef USE_HELIXAACDEC
-	strncpy(current_album, album, sizeof(current_album)-1);
-	current_album[sizeof(current_album)-1] = 0;
+	if (album) {
+		strncpy(current_album, album, sizeof(current_album)-1);
+		current_album[sizeof(current_album)-1] = 0;
+	} else {
+		current_album[0] = 0;
+	}
 
-	strncpy(current_artist, artist, sizeof(current_artist)-1);
-	current_artist[sizeof(current_artist)-1] = 0;
+	if (artist) {
+		strncpy(current_artist, artist, sizeof(current_artist)-1);
+		current_artist[sizeof(current_artist)-1] = 0;
+	} else {
+		current_artist[0] = 0;
+	}
 
-	strncpy(current_title, title, sizeof(current_title)-1);
-	current_title[sizeof(current_title)-1] = 0;
+	if (title) {
+		strncpy(current_title, title, sizeof(current_title)-1);
+		current_title[sizeof(current_title)-1] = 0;
+	} else {
+		current_title[0] = 0;
+	}
 
 	if (playlistlength) {
 		sprintf(current_pos, "Song %d of %d",
@@ -752,4 +764,3 @@ void new_aac_window_get_meta(char *filename)
 #endif /* USE_HELIXAACDEC */
 }
 
-#endif

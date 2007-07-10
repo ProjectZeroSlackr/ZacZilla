@@ -37,11 +37,10 @@
 #include "pz.h"
 #include "ipod.h"
 #include "piezo.h"
-
+//#include "textinput.h"
 #define FILE_TYPE_PROGRAM 0
 #define FILE_TYPE_DIRECTORY 1
 #define FILE_TYPE_OTHER 2
-
 typedef struct {
     char *name;
     char *full_name;
@@ -50,13 +49,13 @@ typedef struct {
     TWidget *mlink;
     ttk_menu_item *ilink;
 } Directory;
-
+void new_browser_menu(char *initial_path);
 #define _MAKEDIR Directory *dir = (Directory *)item->data
 
 static char *current_file;
 static char curdir[2048];
 static char curdir_hdr[40];
-
+static char * browser_rename_oldname;
 extern int is_video_type(char *extension);
 extern void new_video_window(char *filename);
 extern TWindow *new_textview_window(char * filename);
@@ -65,6 +64,8 @@ extern int is_image_type(char *extension);
 extern int is_mikmod_playlist_type(char *extension);
 extern int is_mikmod_song_type(char *extension);
 extern void new_mikmod_player(char *filename);
+extern void new_podwrite_window_with_file(char * filename);
+
 extern void new_mikmod_player_song(char *filename);
 #endif
 #ifdef __linux__
@@ -118,6 +119,10 @@ void browser_make_short_dir()
 	}
     }
 }
+static void browser_podwrite_open_file()
+{
+	new_podwrite_window_with_file(current_file);
+}
 
 int browser_item_visible (ttk_menu_item *item) 
 {
@@ -156,11 +161,18 @@ static void browser_exec_file(char *filename)
 	new_exec_window(path);
 	free(path);
 }
-
+static int is_nes_type(char *extension);
 static int is_script_type(char *extension)
 {
 	return strcmp(extension, ".sh") == 0;
 }
+
+static int is_nes_type(char *extension)
+{
+	
+	return strcmp(extension, ".nes") == 0;
+}
+
 
 static int is_binary_type(char *filename)
 {
@@ -244,7 +256,8 @@ static TWindow *browser_pipe_exec (ttk_menu_item *item)
 	return ret;
 }
 
-static void handle_type_other(char *filename)
+
+static void handle_type_other(char *filename,char *filefull)
 {
 	char *ext;
 
@@ -269,6 +282,7 @@ static void handle_type_other(char *filename)
 	}
 #endif
 	else if (is_image_type(ext)) {
+		
 		new_image_window(filename);
 	}
 #ifdef __linux__
@@ -281,25 +295,36 @@ static void handle_type_other(char *filename)
 		new_aac_window_get_meta(filename);
 	}
 #endif /* !MPDC */
-	else if (is_tzx_audio_type(ext)) {
-		new_tzx_playback_window(filename);
-	}
-	else if (is_raw_audio_type(ext)) {
-		new_playback_window(filename);
-	}
+	
 #endif /* __linux __ */
 	else if (is_video_type(ext)) {
+		
 		new_video_window(filename);
+		
 	}
+	else if(is_nes_type) {
+	  char *filez;
+	
+	  sprintf(filez,"./darcnes %s",filefull);
+	  chdir("/mnt/");
+	  system(filez);
+	 // browser_exec_file(filez);
+	 // sprintf(filez,"exec /mnt/aj/darcnes %s",filefull);
+	 // system(filez);
+	  //browser_pipe_execn(filez);
+	// new_message_window(filez);
+	 }
 	else if (is_script_type(ext)) {
 		browser_exec_file(filename);
 	}
 	else if (is_text_type(ext)||is_ascii_file(filename)) {
+		
 		ttk_show_window (new_textview_window(filename));
 	}
 	else if (is_binary_type(filename)) {
 		browser_exec_file(filename);
 	}
+	
 	else  {
 		new_message_window(_("No Default Action for this Filetype"));
 	}
@@ -330,7 +355,7 @@ TWindow *browser_mh (ttk_menu_item *item)
 	}
     } else {
 	TWindow *old = ttk_windows->w;
-	handle_type_other (dir->full_name);
+	handle_type_other (dir->full_name,dir->full_name);
 
 	if (ttk_windows->w != old) {
 	    item->sub = ttk_windows->w;
@@ -415,14 +440,28 @@ static TWindow *browser_delete (ttk_menu_item *item)
     ttk_set_popup (ret);
     return ret;
 }
-
+extern TWindow * new_rename_window(ttk_menu_item * item);
+extern TWindow * new_mkdir_window(ttk_menu_item * item);
+extern TWindow * tix_cut_handler(ttk_menu_item * item);
+extern TWindow * tix_paste_handler(ttk_menu_item * item);
+extern TWindow * tix_pastelink_handler(ttk_menu_item * item);
+extern TWindow * tix_copy_handler(ttk_menu_item * item);
+extern TWindow * podwrite_open_handler(ttk_menu_item * item);
 static ttk_menu_item empty_menu[] = {
     { 0, { 0 }, 0, 0 },
     // Items after here are not put in the menu, but can be referenced by browser_action().
     /* dirs: */ { N_("Delete"), { browser_rmdir }, TTK_MENU_ICON_EXE, 0 },
     /* apps: */ { N_("Read output"), { browser_pipe_exec }, TTK_MENU_ICON_EXE, 0 },
     /* other:*/ { N_("Edit with viP"), { browser_vip_open_file }, TTK_MENU_ICON_SUB, 0 },
-    /* files:*/ { N_("Delete"), { browser_delete }, 0, 0 }
+    /* files:*/ { N_("Delete"), { browser_delete }, 0, 0 },
+ {N_("Rename"),{new_rename_window},0,0},
+    {N_("Cut"),{tix_cut_handler},0,0},
+    {N_("Copy"),{tix_copy_handler},0,0},
+    {N_("Paste"),{tix_paste_handler},0,0},
+    {N_("Paste Link"),{tix_pastelink_handler},0,0},
+    {N_("Make Directory"),{new_mkdir_window},0,0},
+    {N_("Open With PodWrite"),{podwrite_open_handler},0,0},
+                 
 };
 
 static int action_maybequit (TWidget *this, int button, int time) 
@@ -431,6 +470,7 @@ static int action_maybequit (TWidget *this, int button, int time)
 	return ttk_menu_button (this, button, 0);
     return TTK_EV_DONE;
 }
+
 
 static int browser_action (TWidget *this, int button)
 {
@@ -444,6 +484,9 @@ static int browser_action (TWidget *this, int button)
     empty_menu[1].flags = empty_menu[2].flags = TTK_MENU_ICON_EXE; empty_menu[3].flags = TTK_MENU_ICON_SUB;
     empty_menu[4].flags = 0;
     empty_menu[1].data = empty_menu[2].data = empty_menu[3].data = empty_menu[4].data = dir;
+
+  empty_menu[5].data=empty_menu[10].data=dir->name;
+  empty_menu[6].data=empty_menu[7].data=empty_menu[8].data=empty_menu[9].data=empty_menu[11].data=dir->full_name;
     current_file = dir->name;
     switch (dir->type) {
     case FILE_TYPE_DIRECTORY:
@@ -457,9 +500,18 @@ static int browser_action (TWidget *this, int button)
 	if (access ("/bin/viP", X_OK) == 0)
 	    ttk_menu_append (popmenu, empty_menu + 3);
 	ttk_menu_append (popmenu, empty_menu + 4);
+	ttk_menu_append(popmenu,empty_menu+6);
 	break;
     }
+    ttk_menu_append(popmenu,empty_menu+5);
     popmenu->button = action_maybequit;
+   ttk_menu_append(popmenu,empty_menu+5);
+ttk_menu_append(popmenu,empty_menu+6);
+ttk_menu_append(popmenu,empty_menu+7);
+ttk_menu_append(popmenu,empty_menu+8);
+ttk_menu_append(popmenu,empty_menu+9);
+ttk_menu_append(popmenu,empty_menu+10);
+ttk_menu_append(popmenu,empty_menu+11);
     ttk_window_set_title (popwin, _("Select Action"));
     ttk_add_widget (popwin, popmenu);
     ttk_popup_window (popwin);
@@ -470,11 +522,12 @@ static int browser_action (TWidget *this, int button)
 
 static int browser_down (TWidget *this, int button) 
 {
-    if (button == TTK_BUTTON_MENU)
-	ttk_widget_set_timer (this, 1000);
+    /*if(button==TTK_BUTTON_MENU)
+    {
+    }
     else if (button != TTK_BUTTON_ACTION)
 	return ttk_menu_down (this, button);
-    return 0;
+    */return 0;
 }
 static int browser_quit (TWidget *this) 
 {
@@ -489,14 +542,39 @@ static int browser_quit (TWidget *this)
 static int browser_button (TWidget *this, int button, int time) 
 {
     if (button == TTK_BUTTON_MENU) {
-	ttk_widget_set_timer (this, 0);
-	if (time > 1750)
-	    browser_quit (this);
+	chdir("/");
+     new_menu_window();
 	return ttk_menu_button (this, button, time);
     } else if (button == TTK_BUTTON_ACTION) {
+	 Directory *dir = 0;
+	 dir=/*(Directory *)*/ ttk_menu_get_selected_item (this) -> data;
+	 current_file = dir->name;
+    if(dir->type==FILE_TYPE_DIRECTORY) {
+	if(dir->dotdot==1)
+	chdir("../");
+	else
+	chdir(dir->name);
+	new_browser_menu(curdir);
+	this->dirty++;
+	}
+	else {
+   
+	handle_type_other(dir->name,dir->full_name);
+	
+    }
+	
 	return ttk_menu_down (this, button);
     }
-    return 0;
+    else if(button==TTK_BUTTON_PREVIOUS) {
+     
+      
+      chdir("../");
+	new_browser_menu(curdir);
+	
+	
+      }
+      
+        return 0;
 }
 
 static TWidget *browser_new_menu (const char *dirc, int w, int h)
@@ -504,13 +582,12 @@ static TWidget *browser_new_menu (const char *dirc, int w, int h)
     TWidget *ret = ttk_new_menu_widget (empty_menu, ttk_menufont, w, h);
     ret->holdtime = 500;
     ret->held = browser_action;
-    ret->down = browser_down; // handles Menu holding, along with
+    //ret->down = browser_down; // handles Menu holding, along with
     ret->button = browser_button; // this and
     ret->timer = browser_quit; // this
 
-    chdir (dirc);
-    
-    DIR *dp = opendir (dirc);
+        
+    DIR *dp = opendir (curdir);
     struct dirent *d;
     while ((d = readdir (dp))) {
 	const char *name;
@@ -566,11 +643,29 @@ static TWidget *browser_new_menu (const char *dirc, int w, int h)
 
 void new_browser_window(char *initial_path)
 {
-    TWindow *ret;
+    TWindow *ret=0;
 
-    if (initial_path) {
+   if (initial_path) {
 	chdir(initial_path);
     }
+    getcwd(curdir, sizeof(curdir));
+    ret = ttk_new_window();
+
+    browser_make_short_dir();
+    if (ipod_get_setting (BROWSER_PATH)) {
+	ttk_window_set_title (ret, curdir_hdr);
+    } else {
+	ttk_window_set_title (ret, _("File Browser"));
+    }
+    ttk_add_widget (ret, browser_new_menu (curdir, ret->w, ret->h));
+    ttk_show_window (ret);
+}
+
+void new_browser_menu(char *initial_path)
+{
+    TWindow *ret;
+
+  
     getcwd(curdir, sizeof(curdir));
     ret = ttk_new_window();
 
@@ -743,3 +838,4 @@ void new_exec_window(char *filename)
 	new_message_window(filename);
 #endif /* IPOD */
 }
+

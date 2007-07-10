@@ -44,8 +44,10 @@ int is_image_type(char *extension)
 
 void new_image_window(char *filename)
 {
-    TWindow *w = ttk_new_window();
-    return ttk_add_widget (w, ttk_new_imgview_widget (w->w, w->h, ttk_load_image (filename)));
+    TWindow *w;
+    w= ttk_new_window();
+    ttk_add_widget (w, ttk_new_imgview_widget (w->w, w->h, ttk_load_image (filename)));
+    return ttk_show_window(w);
 }
 
 

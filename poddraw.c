@@ -51,10 +51,10 @@ static int updown = 0;
 #define PDMAX( A, B )   (((A)>(B))?(A):(B))
 
 static GR_COLOR colors[] = {
-	BLACK,
-	GRAY,
-	LTGRAY,
-	WHITE,
+	0,0,0,
+	10,10,10,
+	20,20,20,
+	255,255,255,
 
         GR_RGB( 255,   0,   0 ),
         GR_RGB( 255, 128,   0 ),
@@ -264,7 +264,7 @@ void new_poddraw_window( void )
 	poddraw_alloc_buffer();
 	poddraw_gc = pz_get_gc(1);
 	GrSetGCUseBackground(poddraw_gc, GR_FALSE);
-	GrSetGCForeground(poddraw_gc, BLACK);
+	GrSetGCForeground(poddraw_gc, GR_RGB(0,0,0));
 
 	poddraw_wid = pz_new_window(0, HEADER_TOPLINE + 1, 
 	    screen_info.cols, screen_info.rows - (HEADER_TOPLINE + 1), 

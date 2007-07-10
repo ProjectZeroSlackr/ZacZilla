@@ -238,9 +238,9 @@ void lights_draw_button( int x, int y, int id )
 		if( lights_screen_info.bpp == 16 )
 		    GrSetGCForeground( lights_gc, GR_RGB( 255, 100, 50 ));
 		else 
-		    GrSetGCForeground( lights_gc, WHITE );
+		    GrSetGCForeground( lights_gc, GR_RGB(255,255,255) );
 	} else {
-		GrSetGCForeground( lights_gc, BLACK );
+		GrSetGCForeground( lights_gc, GR_RGB(0,0,0) );
 	}
 	GrFillEllipse( lights_bufwid, lights_gc, 
 		ls2+x, ls2+y, ls2-2, ls2-2 );
@@ -249,7 +249,7 @@ void lights_draw_button( int x, int y, int id )
 	if( lights_screen_info.bpp == 16 )
 	    GrSetGCForeground( lights_gc, GR_RGB( 102, 0, 0 ));
 	else 
-	    GrSetGCForeground( lights_gc, GRAY );
+	    GrSetGCForeground( lights_gc, GR_RGB(80,80,80) );
 	GrEllipse( lights_bufwid, lights_gc, 
 		    ls2+x, ls2+y, ls2-1, ls2-1 );
 
@@ -260,9 +260,9 @@ void lights_draw_button( int x, int y, int id )
 		    if( lights_screen_info.bpp == 16 )
 			GrSetGCForeground( lights_gc, GR_RGB( 0, 255, 0 ));
 		    else
-			GrSetGCForeground( lights_gc, WHITE );
+			GrSetGCForeground( lights_gc, GR_RGB(255,255,255) );
 		} else {
-		    GrSetGCForeground( lights_gc, BLACK );
+		    GrSetGCForeground( lights_gc, GR_RGB(0,0,0) );
 		}
 		GrEllipse( lights_bufwid, lights_gc, 
 			ls2+x, ls2+y, ls2, ls2 );
@@ -274,12 +274,12 @@ void lights_draw_button( int x, int y, int id )
 			ls2+x, ls2+y, ls2, ls2-1 );
 
 		if( lights_cursblink ) {
-			GrSetGCForeground( lights_gc, BLACK );
+			GrSetGCForeground( lights_gc, GR_RGB(0,0,0) );
 		} else {
 		    if( lights_screen_info.bpp == 16 )
 			GrSetGCForeground( lights_gc, GR_RGB( 0, 255, 255 ));
 		    else
-			GrSetGCForeground( lights_gc, WHITE );
+			GrSetGCForeground( lights_gc, GR_RGB(255,255,255) );
 		}
 		GrEllipse( lights_bufwid, lights_gc, 
 			ls2+x, ls2+y, ls2-2, ls2-2 );
@@ -295,7 +295,7 @@ static void lights_do_draw( void )
 	char buf[32];
 
 	/* start clear */
-	GrSetGCForeground( lights_gc, BLACK );
+	GrSetGCForeground( lights_gc, GR_RGB(0,0,0) );
 	GrFillRect( lights_bufwid, lights_gc, 0, 0,
 		    lights_screen_info.cols, lights_height );
 
@@ -312,7 +312,7 @@ static void lights_do_draw( void )
 	}
 
 	/* draw the stats */
-	GrSetGCForeground( lights_gc, WHITE );
+	GrSetGCForeground( lights_gc, GR_RGB(255,255,255) );
 	GrText( lights_bufwid, lights_gc, 3, 20, "Mov", 3, GR_TFASCII );
 	snprintf( buf, 16, "%2d", lights_nmoves );
 	GrText( lights_bufwid, lights_gc, 5, 35, buf, 3, GR_TFASCII );
@@ -482,7 +482,7 @@ void new_lights_window(void)
 
 	lights_gc = pz_get_gc (1);
         GrSetGCUseBackground(lights_gc, GR_FALSE);
-        GrSetGCForeground(lights_gc, BLACK);
+        GrSetGCForeground(lights_gc, GR_RGB(0,0,0));
 
 	lights_height = (lights_screen_info.rows - (HEADER_TOPLINE + 1));
 

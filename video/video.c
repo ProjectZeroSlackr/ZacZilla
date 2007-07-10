@@ -82,6 +82,7 @@ static char * playlistFiles[250];  /* YES - this needs to be changed - aegray = 
 #endif
 
 
+unsigned int full_hw_version = 0;	
 static int audio_header_found = 0;
 static int video_status = VIDEO_CONTROL_MODE_RUNNING;
 static int video_useAudio = 0;
@@ -89,7 +90,6 @@ static int video_screenWidth;
 static int video_screenHeight;
 static int video_screenBPP;
 static int video_useKeys = 1;
-static long hw_vers = 0;
 static int curbuffer = 0;
 static int video_vol_delta = 0;
 static int video_waitUsecPause = 5000;
@@ -126,7 +126,7 @@ struct framet {
 
 struct filebuffer {
 	unsigned char * buffer;
-	unsigned startOff, globalOff, localOff, size, filesize;
+	long long startOff, globalOff, localOff, size, filesize;
 	FILE * file;
 } filebuffer_t;
 
@@ -134,12 +134,12 @@ struct filebuffer {
 // PROTOS
 static void cop_wakeup();
 static void cop_initVideo();
-static void cop_setVideoParams(int, int, int);
+static void cop_setVideoParams(unsigned int, unsigned int, unsigned int);
 /*static void cop_waitReady(int);*/
 static void cop_presentFrames(int, struct framet *, int);
 static void cop_setPlay(int);
 static int fbread(void *, unsigned, struct filebuffer *);
-static void fbseek(struct filebuffer *, int, int);
+static void fbseek(struct filebuffer *, long long, int);
 static unsigned getFilesize(FILE *);
 static int fourccCmp(char[4], char[4]);
 static int openAviFile(char *);
@@ -168,7 +168,7 @@ static void video_status_message(char *);
 //  /////////////////////////////////////////////////////
 static void cop_wakeup()
 {
-	if (hw_vers >= 40000) {
+	if (hw_version >= 0x4) {
 		outl(0x0, 0x60007004);
 	}
 	else {
@@ -191,7 +191,7 @@ static void cop_initVideo()
 	}
 }
 
-static void cop_setVideoParams(int width, int height, int usecsPerFrame)
+static void cop_setVideoParams(unsigned int width, unsigned int height, unsigned int usecsPerFrame)
 {
 	outl(width, VAR_VIDEO_FRAME_WIDTH);
 	outl(height, VAR_VIDEO_FRAME_HEIGHT);
@@ -233,7 +233,7 @@ static int fbread(void * dest, unsigned size, struct filebuffer * f)
 	return 1;
 }
 
-static void fbseek(struct filebuffer * f, int off, int seekstate)
+static void fbseek(struct filebuffer * f, long long off, int seekstate)
 {
 	if (seekstate == SEEK_CUR) {
 		f->globalOff += off;
@@ -246,13 +246,13 @@ static void fbseek(struct filebuffer * f, int off, int seekstate)
 
 static unsigned  getFilesize(FILE * f)
 {
-	long w;
-	long l;
+	long long w;
+	long long l;
 
 	w = ftell(f);
 	fseek(f, 0, SEEK_END);
 	l = ftell(f);
-	fseek(f, w, SEEK_SET);
+	//fseek(f, w, SEEK_SET);
 
 	return l;
 }
@@ -287,7 +287,9 @@ static int openAviFile(char * filename)
 	int i;
 	curFile = fopen(filename, "r");
 	if (curFile) {
+	new_message_window("opened");
 		filesize = getFilesize(curFile);
+		new_message_window(filesize);
 		for (i = 0; i < VIDEO_FILEBUFFER_COUNT; i++) {
 			fileBuffers[i].buffer = malloc(VIDEO_FILEBUFFER_SIZE);
 			fileBuffers[i].filesize = filesize;
@@ -693,17 +695,19 @@ static void audio_thread_stop(void)
 #ifdef USEMALLOCFORAUDIOSTACK
 	free(audio_thread_stack);
 #endif	
+	kill(audio_thread_pid, SIGKILL);
 }
 
 /* init globals to fix the not loading because I was being lazy before */
 static void init_variables()
 {
+	memset(&mainHeader, 0, sizeof(mainHeader));
+	memset(&wavHeader, 0, sizeof(wavHeader));
+	memset(&bitmapInfo, 0, sizeof(bitmapInfo));
 
 	video_status = VIDEO_CONTROL_MODE_STARTING; 
 	video_useAudio = 0;
 	video_useKeys = 1;
-	hw_vers = 0;
-
 
 	audio_thread_starting = 0;
 	audio_thread_running = 0;
@@ -735,41 +739,58 @@ static int playVideo(char * filename)
 	struct framet frames[VIDEO_FILEBUFFER_COUNT][NUM_FRAMES_BUFFER];
 	int i;
 	int buffersProcessed = 0;
-	
+
 	curbuffer = 0;
-	hw_vers = ipod_get_hw_version();
-	if (hw_vers < 40000) {
+	if (hw_version < 0x4) {
 		video_screenWidth=160;
 		video_screenHeight=128;
 		video_screenBPP=2;
 		video_useAudio=1;
-	} else if (((hw_vers >= 40000) && (hw_vers < 50000)) || ((hw_vers >= 70000) && (hw_vers < 80000))) {
+	} else if (hw_version == 0x4 || hw_version == 0x7) {
 		video_screenWidth=138;
 		video_screenHeight=110;
 		video_screenBPP=2;
 		video_useAudio=1;
-	} else if ((hw_vers>=50000) && (hw_vers < 60000)) {
+	} else if (hw_version==0x5) {
 		video_screenWidth=160;
 		video_screenHeight=128;
 		video_screenBPP=2;
 		video_useAudio=1;
-	} else if ((hw_vers>=60000) && (hw_vers < 70000)) {
+	} else if (hw_version==0x6) {
 		video_screenWidth=220;
 		video_screenHeight=176;
 		video_screenBPP=16;
 		video_useAudio = 1;
 		video_useKeys = 1;	
 		video_waitUsecPause = 15000;
-	}
+	} else if (hw_version==0xc) {
+		video_screenWidth=176;
+		video_screenHeight=132;
+		video_screenBPP=2;
+		video_useAudio=1;
+		video_useKeys=1;
+		video_waitUsecPause = 15000;
+	} //else  {
+	 //nes_window("Video!!???");
+	  video_screenWidth=320;
+	  video_screenHeight=240;
+	  video_screenBPP=2;
+	  video_useAudio=0;
+	  video_useKeys=0;
+	  video_waitUsecPause=15000;
+	//  }
 
 	i = 0;
-
+//nes_window("Loaded");
 		
 	openAviFile(filename);
+	//nes_window("opened");
 	readVideoInfo(curFile);
+	//nes_window("read"); 
 	if (!audio_header_found)
 		video_useAudio = 0;
 	outl((unsigned int)&ipod_handle_video, VAR_COP_HANDLER);
+
 	cop_wakeup();
 	audio_open();
 
@@ -777,7 +798,9 @@ static int playVideo(char * filename)
 		audio_thread_start();
 	cop_setPlay(0);
 	cop_initVideo();
+
 	cop_setVideoParams(bitmapInfo.bmiHeader.biWidth, bitmapInfo.bmiHeader.biHeight, mainHeader.dwMicroSecPerFrame);
+
 	curframes = 1;
 	while ((curframes > 0)) {
 		while (inl(VAR_VIDEO_BUFFER_DONE + curbuffer * sizeof(unsigned int)) == 0) {
@@ -865,10 +888,10 @@ exiting:
 
 static void video_draw_pause()
 {
-	GrSetGCForeground(video_gc, WHITE);
+	GrSetGCForeground(video_gc, GR_RGB(255,255,255));
 	GrFillRect(video_wid, video_gc, 8, 8, 16, 32);
 	GrFillRect(video_wid, video_gc, 32, 8, 16, 32);
-	GrSetGCForeground(video_gc, BLACK);
+	GrSetGCForeground(video_gc, GR_RGB(0,0,0));
 	GrRect(video_wid, video_gc, 8, 8, 16, 32);
 	GrRect(video_wid, video_gc, 32, 8, 16, 32);
 }
@@ -884,9 +907,9 @@ static void video_draw_searchbar()
 
         offX = (int)((double)((double)video_curPosition/mainHeader.dwTotalFrames) * (video_screenWidth-30)) + 16;
 
-	GrSetGCForeground(video_gc, WHITE);
+	GrSetGCForeground(video_gc, GR_RGB(255,255,255));
 	GrFillRect(video_wid, video_gc, 16, video_screenHeight-2 * height, video_screenWidth-30+6, height);
-	GrSetGCForeground(video_gc, BLACK);
+	GrSetGCForeground(video_gc, GR_RGB(0,0,0));
 	GrRect(video_wid, video_gc, 16, video_screenHeight-2 * height, video_screenWidth-30+6, height);
 	GrFillRect(video_wid, video_gc, offX, video_screenHeight-2*height, 5, height);
 }
@@ -970,9 +993,9 @@ static void video_status_message(char *msg)
 	GrGetGCTextSize(video_gc, msg, -1, GR_TFASCII, &txt_width, &txt_height, &txt_base);
 	txt_x = (screen_info.cols - (txt_width + 10)) >> 1;
 	txt_y = (screen_info.rows - (txt_height + 10)) >> 1;
-	GrSetGCForeground(video_gc, WHITE);
+	GrSetGCForeground(video_gc, GR_RGB(255,255,255));
 	GrFillRect(video_wid, video_gc, txt_x, txt_y, txt_width + 10, txt_height + 10);
-	GrSetGCForeground(video_gc, BLACK);
+	GrSetGCForeground(video_gc, GR_RGB(0,0,0));
 	GrRect(video_wid, video_gc, txt_x, txt_y, txt_width + 10, txt_height + 10);
 	GrText(video_wid, video_gc, txt_x + 5, txt_y + txt_base + 5, msg, -1, GR_TFASCII);
 }
@@ -1062,14 +1085,21 @@ void new_video_window(char *filename)
 #ifndef IPOD
 	pz_error("No video support on the desktop.");
 #else /* IPOD */
+
+	if (full_hw_version==0)
+	{
+		full_hw_version = ipod_get_hw_version();
+	}
 	outl(1, VAR_VIDEO_ON);
+	outl(0, VAR_VIDEO_MODE);
+	cop_wakeup();
 	init_variables();
 	video_status = VIDEO_CONTROL_MODE_STARTING; 
 	video_curPosition = 0;
 	video_gc = pz_get_gc(1);
 	GrSetGCUseBackground(video_gc, GR_FALSE);
-	GrSetGCForeground(video_gc, BLACK);
-
+	GrSetGCForeground(video_gc, GR_RGB(0,0,0));
+//nes_window("Create win");
 	video_wid = pz_new_window(0, 0, screen_info.cols, screen_info.rows, video_do_draw, video_do_keystroke);
 
 	GrSelectEvents(video_wid, 
@@ -1077,9 +1107,10 @@ void new_video_window(char *filename)
 	GrMapWindow(video_wid);
 
 	GrClearWindow(video_wid, GR_FALSE);
-
+//nes_window("Load");
 	video_status_message("Loading video...");
-	playVideo(filename);
+//nes_window("Play");	
+playVideo(filename);
 	outl(0, VAR_VIDEO_ON);
 #endif
 }

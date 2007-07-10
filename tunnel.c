@@ -82,10 +82,6 @@ static void advance_and_check();
 
 static int handle_event(GR_EVENT *event);
 
-// High Score reading/writing.
-static void readHighScore();
-static void writeHighScore();
-
 // queue stuff.
 static int new_chasm_queue(int key, int size, QUEUENODE **head,  QUEUENODE **middle, QUEUENODE **tail);
 static void cycle_chasm_queue(int key, QUEUENODE **head,  QUEUENODE **middle, QUEUENODE **tail);\
@@ -118,7 +114,7 @@ void new_tunnel_window(void)
     /* Display the window: */
     GrMapWindow (tunnel_wid);
 	draw_header();
-	readHighScore();
+	highScore=readHighScore(SAVEFILE);
 	reset();
 }
 
@@ -141,9 +137,9 @@ static void draw_result()
 	sprintf(strHighScore, "High Score:%li", highScore);
 	GrGetGCTextSize(tunnel_gc, strHighScore, -1, GR_TFASCII, &width, &height, &base);
 	
-	GrSetGCForeground(tunnel_gc, WHITE);
+	GrSetGCForeground(tunnel_gc, GR_RGB(255,255,255));
 	GrFillRect(tunnel_wid, tunnel_gc, (wi.width - width) / 2 - 3, wi.height / 2 - height - 3, width + 8, height * 2 + 2);
-	GrSetGCForeground(tunnel_gc, BLACK);
+	GrSetGCForeground(tunnel_gc, GR_RGB(0,0,0));
 	GrRect(tunnel_wid, tunnel_gc, (wi.width - width) / 2 - 3, wi.height / 2 - height - 3, width + 8, height * 2 + 2);
 	GrText (tunnel_wid, tunnel_gc, (wi.width - width) / 2, wi.height / 2 - height / 2 + 2, strScore, -1, GR_TFASCII );
 	GrText (tunnel_wid, tunnel_gc, (wi.width - width) / 2, wi.height / 2 + height / 2 + 2, strHighScore, -1, GR_TFASCII );
@@ -179,10 +175,10 @@ static void advance_and_check()
 	int i;
 	int y;
 	QUEUENODE *node;
-	GR_COLOR gr = GRAY;
-	GR_COLOR wh = WHITE;
+	GR_COLOR gr = GR_RGB(80,80,80);
+	GR_COLOR wh = GR_RGB(255,255,255);
 	
-	GrSetGCForeground(tunnel_gc, WHITE);
+	GrSetGCForeground(tunnel_gc, GR_RGB(255,255,255));
 	GrFillRect(temp_pixmap, tunnel_gc,
 			   0, 0, screen_info.cols, (screen_info.rows - (HEADER_TOPLINE + 1)));
 	
@@ -209,11 +205,11 @@ static void advance_and_check()
 		GrSetGCForeground(tunnel_gc, wh);
 		GrFillRect(temp_pixmap, tunnel_gc, 0, y, screen_info.cols, 2);
 
-		GrSetGCForeground(tunnel_gc, WHITE);
+		GrSetGCForeground(tunnel_gc, GR_RGB(255,255,255));
 		GrFillRect(temp_pixmap, tunnel_gc, 
 				node->offset, y, chasmWidth, 2);
 
-		GrSetGCForeground(tunnel_gc, BLACK);
+		GrSetGCForeground(tunnel_gc, GR_RGB(0,0,0));
 		GrFillRect(temp_pixmap, tunnel_gc, 
 				node->offset-5, y, 5, 2);
 		GrFillRect(temp_pixmap, tunnel_gc,
@@ -232,7 +228,7 @@ static void advance_and_check()
 	}
 	
 	// Draw ball
-    GrSetGCForeground(tunnel_gc, BLACK);
+    GrSetGCForeground(tunnel_gc, GR_RGB(0,0,0));
 	GrFillEllipse(temp_pixmap ,tunnel_gc, ball.x, wi.height / 2, ball.radius, ball.radius);
 	
 	// Map window 
@@ -267,7 +263,7 @@ static int handle_event(GR_EVENT *event)
 			{
 				case 'm': // Menu button.
 					GrDestroyTimer( timer_id );
-					writeHighScore();
+					writeHighScore(SAVEFILE,highScore);
 					pz_close_window (tunnel_wid);
 					break;
 				case 'w': // rewind button
@@ -307,31 +303,6 @@ static int handle_event(GR_EVENT *event)
 	return 0;
 }
 
-// Reads high score from file in SAVEFILE
-static void readHighScore()
-{
-	FILE *input;
-	if ((input = fopen(SAVEFILE, "r")) == NULL)
-	{
-		perror(SAVEFILE);
-		return;
-	}
-	fscanf(input, "%ld", &highScore); 
-	fclose(input);
-}
-
-// Writes high score to file in SAVEFILE
-static void writeHighScore()
-{
-	FILE *output;
-	if ((output = fopen(SAVEFILE, "w")) == NULL)
-	{
-		perror(SAVEFILE);
-		return;
-	}
-	fprintf(output, "%ld", highScore);
-	fclose(output);
-}
 
 // Sets up a linked list
 static int new_chasm_queue(int key, int size, QUEUENODE **head,  QUEUENODE **middle, QUEUENODE **tail)

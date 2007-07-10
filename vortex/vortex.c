@@ -51,7 +51,7 @@ int Vortex_rand( int max )
 
 void Vortex_ClearRect(int x, int y, int w, int h)
 {
-	GrSetGCForeground(Vortex_globals.gc, VORTEX_COLOR_BG);
+	GrSetGCForeground(Vortex_globals.gc, GR_RGB(160,160,160));
 	GrFillRect(Vortex_globals.wid, Vortex_globals.gc, x, y, w, h);
 }
 
@@ -183,7 +183,7 @@ void Vortex_DrawSegment( int _x1, int _y1, int _x2, int _y2, int which)
 */
 
 	if( which == SEGMENT_FRONT ) {
-	    GrSetGCForeground(Vortex_globals.gc, VORTEX_COLOR_WEBFRONT);
+	    GrSetGCForeground(Vortex_globals.gc, GR_RGB(160,160,160));
 	    GrLine( Vortex_globals.wid, Vortex_globals.gc, x1, y1, x2, y2 );
 	}
 
@@ -221,8 +221,8 @@ static void Vortex_drawStats()
 {
 	char buf[16];
 
-	GrSetGCBackground( Vortex_globals.gc, VORTEX_COLOR_BG);
-	GrSetGCForeground(Vortex_globals.gc, VORTEX_COLOR_SCORE);
+	GrSetGCBackground( Vortex_globals.gc, GR_RGB(0,0,0));
+	GrSetGCForeground(Vortex_globals.gc, GR_RGB(80,80,80));
 
 	/* number of bases */
 	snprintf( buf, 16, "%02d", Vortex_globals.lives );

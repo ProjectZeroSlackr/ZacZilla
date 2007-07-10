@@ -254,7 +254,7 @@ static void matrix_loop(void)
 			}
 			for (i = 1; i <= lines; i++) {
 				if (matrix[i][j].val == 0 || matrix[i][j].bold == 2) {
-					fg = inverted ? BLACK : WHITE;
+					fg = inverted ? GR_RGB(0,0,0) : GR_RGB(255,255,255);
 					GrSetGCForeground(matrix_gc, fg);
 					if (matrix[i][j].val == 0)
 						matrix_blit_char(i - 1, j, 20);
@@ -266,7 +266,7 @@ static void matrix_loop(void)
 							GR_RGB(0, (int) rand() % 35 + 220, 0) :
 							GR_RGB(0, (int) rand() % 100 + 120, 0);
 					else
-						fg = inverted ? LTGRAY : GRAY;
+						fg = inverted ? GR_RGB(160,160,160) : GR_RGB(80,80,80);
 					GrSetGCForeground(matrix_gc, fg);
 					if (matrix[i][j].val % 2 == 0) {
 						if (photo)
@@ -274,7 +274,7 @@ static void matrix_loop(void)
 								GR_RGB(0, (int) rand() % 35 + 220, 0) :
 								GR_RGB(0, (int) rand() % 100 + 120, 0);
 						else
-							fg = inverted ? GRAY : LTGRAY;
+							fg = inverted ? GR_RGB(80,80,80) : GR_RGB(160,160,160);
 						GrSetGCForeground(matrix_gc, fg);
 					}
 					if (matrix[i][j].val == 1) 
@@ -336,7 +336,7 @@ static int matrix_handle_event(GR_EVENT * event)
 		case '\n': /* action */
 			running = 0;
 			inverted = 1 - inverted;
-			bg = inverted ? WHITE : BLACK;
+			bg = inverted ? GR_RGB(255,255,255) : GR_RGB(0,0,0);
 			GrSetGCBackground(matrix_gc, bg);
 			matrix_clear_screen();
 			running = 1;
@@ -391,7 +391,7 @@ void new_matrix_window( void )
 	photo = (screen_info.bpp == 16) ? 1 : 0;
 		
 	GrSetGCUseBackground(matrix_gc, GR_TRUE);
-	GrSetGCBackground(matrix_gc, BLACK);
+	GrSetGCBackground(matrix_gc, GR_RGB(0,0,0));
 
 	matrix_wid = pz_new_window(0, HEADER_TOPLINE + 1, screen_info.cols,
 	                           screen_info.rows - (HEADER_TOPLINE + 1), 

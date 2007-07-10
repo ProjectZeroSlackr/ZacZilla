@@ -93,8 +93,8 @@ static void reset_board()
     GrClearWindow (tictactoe_wid, GR_FALSE);
 	
 	GrSetGCUseBackground(tictactoe_gc, GR_TRUE);
-    GrSetGCBackground(tictactoe_gc, WHITE);
-    GrSetGCForeground(tictactoe_gc, BLACK);
+    GrSetGCBackground(tictactoe_gc, GR_RGB(255,255,255));
+    GrSetGCForeground(tictactoe_gc, GR_RGB(0,0,0));
 	
 	GrLine(tictactoe_wid, tictactoe_gc, wi.width * .90, (wi.height / 2.) - (wi.height / 2. * .33), 
 		   wi.width - wi.width * .90, (wi.height / 2.) - (wi.height / 2. * .33));
@@ -106,7 +106,7 @@ static void reset_board()
 	GrLine(tictactoe_wid, tictactoe_gc, (wi.width / 2.) + (wi.width / 2. * .33), wi.height * .90, 
 		   (wi.width / 2.) + (wi.width / 2. * .33), wi.height - wi.height * .90);
 	currSquare = 0;
-	drawXO(currSquare, GRAY, 'x');
+	drawXO(currSquare, GR_RGB(80,80,80), 'x');
 }
 
 
@@ -121,7 +121,7 @@ void drawXO(int pos, int shade, char theChar)
 {	
 	int xPos, yPos, i;
 	GrSetGCUseBackground(tictactoe_gc, GR_TRUE);
-    GrSetGCBackground(tictactoe_gc, WHITE);
+    GrSetGCBackground(tictactoe_gc, GR_RGB(255,255,255));
     GrSetGCForeground(tictactoe_gc, shade);
 	
 	xPos = wi.width * .25 * (pos % 3 + 1);
@@ -172,8 +172,8 @@ static int handle_event(GR_EVENT *event)
 							if (i <= -1)
 								i = 9;
 						if (board[currSquare] == '-')
-							drawXO(currSquare, WHITE, 'x');
-						drawXO(i, GRAY, 'x');
+							drawXO(currSquare, GR_RGB(255,255,255), 'x');
+						drawXO(i, GR_RGB(80,80,80), 'x');
 						currSquare = i;
 					}
 					break;	
@@ -183,8 +183,8 @@ static int handle_event(GR_EVENT *event)
 							if (i >= 9)
 								i = -1;
 						if (board[currSquare] == '-')
-							drawXO(currSquare, WHITE, 'x');
-						drawXO(i, GRAY, 'x');
+							drawXO(currSquare, GR_RGB(255,255,255), 'x');
+						drawXO(i, GR_RGB(80,80,80), 'x');
 						currSquare = i;
 					}
 					break;						
@@ -216,7 +216,7 @@ static void playerMadeMove(int pos)
 	
 	if (board[pos] == '-') {
 		board[pos] = 'x';
-		drawXO(currSquare, BLACK , 'x');
+		drawXO(currSquare, GR_RGB(0,0,0) , 'x');
 		if ((won = test_won()) != NONE) { 
 			output(won);
 		} else {
@@ -357,5 +357,5 @@ static void find_move()
 	
 	difficulty--;
 	board[besti[i]] = 'o';
-	drawXO(besti[i], BLACK,'o');
+	drawXO(besti[i], GR_RGB(0,0,0),'o');
 }

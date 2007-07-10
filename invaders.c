@@ -345,12 +345,12 @@ static void fire_update()
 				/* when hit, fire out, destroy it
 				 * (for now not animation) */
 				myfire_delete(i);
-				GrSetGCForeground(invaders_gc, WHITE);
+				GrSetGCForeground(invaders_gc, GR_RGB(255,255,255));
 				draw_alien(colhit,rowhit,itest);
 				Dprintf("hit %d,%d,%d\n", colhit,rowhit,itest);
 				Dprintf(" %d,%d\n",alien_maxx-alien_minx,
 						cell_maxx - cell_minx);
-				GrSetGCForeground(invaders_gc, BLACK);	
+				GrSetGCForeground(invaders_gc, GR_RGB(0,0,0));	
 				alien_status[rowhit + colhit * aliens_rows] = 0;
 				score += colhit * 2;
 				update_score();
@@ -406,13 +406,13 @@ static void invaders_DrawScene()
 {
 	aliens_slow--;
 	if(aliens_slow <= 0) {
-		GrSetGCForeground(invaders_gc, WHITE);
+		GrSetGCForeground(invaders_gc, GR_RGB(255,255,255));
 		aliens_draw(itest);
 		
 		itest = (itest != 0) ? 0 : 1;
 		aliens_update_position();
 		
-		GrSetGCForeground(invaders_gc, BLACK);
+		GrSetGCForeground(invaders_gc, GR_RGB(0,0,0));
 		aliens_draw(itest);
 		
 		aliens_slow = aliens_left / 4 - level + 4;
@@ -441,12 +441,12 @@ static void invaders_DrawScene()
 		alienfire[alien_firing-1].dir = 1;
 	}
 	
-	GrSetGCForeground(invaders_gc, WHITE);
+	GrSetGCForeground(invaders_gc, GR_RGB(255,255,255));
 	me_draw();
 	fire_draw();
 
 	fire_update();
-	GrSetGCForeground(invaders_gc, BLACK);
+	GrSetGCForeground(invaders_gc, GR_RGB(0,0,0));
 	me_draw();
 	fire_draw();
 }
@@ -467,10 +467,10 @@ static void update_score()
 {
 	char s[24];
 
-	GrSetGCForeground(invaders_gc, WHITE);
+	GrSetGCForeground(invaders_gc, GR_RGB(255,255,255));
 	GrFillRect(invaders_score_pix, invaders_gc, 0, 0,
 			screen_info.cols, 13);
-	GrSetGCForeground(invaders_gc, BLACK);
+	GrSetGCForeground(invaders_gc, GR_RGB(0,0,0));
 	sprintf(s, "Score %.5d", score);
 	vector_render_string(invaders_score_pix, invaders_gc, s, 1, 1, 2, 2);
 	if(score > high_score)
@@ -508,9 +508,9 @@ static int invaders_handle_event(GR_EVENT *event)
 				break;
 
 			case 'l':
-				GrSetGCForeground(invaders_gc, WHITE);
+				GrSetGCForeground(invaders_gc, GR_RGB(255,255,255));
 				me_draw();
-				GrSetGCForeground(invaders_gc, BLACK);
+				GrSetGCForeground(invaders_gc, GR_RGB(0,0,0));
 
 				if(me_still == 'l'){
 					me_accel_counter++;
@@ -527,9 +527,9 @@ static int invaders_handle_event(GR_EVENT *event)
 				ret |= KEY_CLICK;
 				break;
 			case 'r':
-				GrSetGCForeground(invaders_gc, WHITE);
+				GrSetGCForeground(invaders_gc, GR_RGB(255,255,255));
 				me_draw();
-				GrSetGCForeground(invaders_gc, BLACK);
+				GrSetGCForeground(invaders_gc, GR_RGB(0,0,0));
 
 				if(me_still == 'r'){
 					me_accel_counter++;
@@ -584,10 +584,10 @@ static int invaders_handle_event(GR_EVENT *event)
 		int y = ((screen_info.rows - 21) / 4) * 3;
 		int xp = x - (vector_string_pixel_width(game_over, 1, 2) / 2);
 		int yp = y - 8;
-		GrSetGCForeground(invaders_gc, WHITE);
+		GrSetGCForeground(invaders_gc, GR_RGB(255,255,255));
 		GrFillRect(invaders_wid, invaders_gc, xp - 2, yp - 2,
 				(x - xp + 2) * 2, (y - yp + 2) * 2);
-		GrSetGCForeground(invaders_gc, BLACK);
+		GrSetGCForeground(invaders_gc, GR_RGB(0,0,0));
 		vector_render_string(invaders_wid, invaders_gc,
 				game_over, 1, 2,
 				xp, yp);
@@ -601,11 +601,11 @@ static int invaders_handle_event(GR_EVENT *event)
 		case '\r': /* push button */
 			if(gameover_waitcounter <= 0) {
 				score = 0;
-				GrSetGCForeground(invaders_gc, WHITE);
+				GrSetGCForeground(invaders_gc, GR_RGB(255,255,255));
 				GrFillRect(invaders_wid,invaders_gc,
 					0, 0, screen_info.cols,
 					screen_info.rows);
-				GrSetGCForeground(invaders_gc, BLACK);
+				GrSetGCForeground(invaders_gc, GR_RGB(0,0,0));
 				level = 0;
 				score = 0;
 				invaders_create_board(level);
@@ -641,8 +641,8 @@ void new_invaders_window()
 	invaders_gc = pz_get_gc(1);
 
 	GrSetGCUseBackground(invaders_gc, GR_TRUE);
-	GrSetGCBackground(invaders_gc, WHITE);
-	GrSetGCForeground(invaders_gc, BLACK);
+	GrSetGCBackground(invaders_gc, GR_RGB(255,255,255));
+	GrSetGCForeground(invaders_gc, GR_RGB(0,0,0));
 	
 	invaders_score_pix = GrNewPixmap(screen_info.cols, 13, 0);
 

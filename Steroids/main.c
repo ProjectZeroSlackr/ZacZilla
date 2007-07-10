@@ -355,13 +355,13 @@ static void steroids_DrawScene()
     case STEROIDS_GAME_STATE_PLAY:
 	// Clear playfield:
 	//
-	GrSetGCForeground(steroids_globals.game_gc, WHITE);
+	GrSetGCForeground(steroids_globals.game_gc, GR_RGB(255,255,255));
 	GrFillRect(steroids_globals.temp_wid,
 		   steroids_globals.game_gc,
 		   0, 0,
 		   screen_info.cols, (screen_info.rows - (HEADER_TOPLINE + 1)));
 
-	GrSetGCForeground(steroids_globals.game_gc, BLACK);
+	GrSetGCForeground(steroids_globals.game_gc, GR_RGB(0,0,0));
 	/*
 	for (i = 0; i < STEROIDS_ASTEROID_NUM; i++)
 	{
@@ -436,9 +436,9 @@ static void steroids_DrawScene()
 
 
     case STEROIDS_GAME_STATE_GAMEOVER:
-	GrSetGCForeground(steroids_globals.game_gc, WHITE);
+	GrSetGCForeground(steroids_globals.game_gc, GR_RGB(255,255,255));
 	GrFillRect(steroids_globals.game_wid, steroids_globals.game_gc, 0, 0, 168, 128);
-	GrSetGCForeground(steroids_globals.game_gc, BLACK);
+	GrSetGCForeground(steroids_globals.game_gc, GR_RGB(0,0,0));
 	GrText(steroids_globals.game_wid, steroids_globals.game_gc,
 	       45, 35,
 	       "- Game Over -",

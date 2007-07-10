@@ -361,7 +361,7 @@ static wftable waveforms[] = {
 	1700 + 1100			Coin Return	'r'
 	700 + 1700			Ringback	'b'
 
-	(table)		Silver/White
+	(table)		Silver/GR_RGB(255,255,255)
 
                 1209    1336    1477    1633
         697     1       2       3       A
@@ -420,13 +420,13 @@ static void draw_dialer() {
 	GR_SIZE width, height, base;
 
 	GrSetGCUseBackground(dialer_gc, GR_FALSE);
-	GrSetGCForeground(dialer_gc, BLACK);
+	GrSetGCForeground(dialer_gc, GR_RGB(0,0,0));
 	GrGetGCTextSize(dialer_gc, digitdisplay, -1, GR_TFASCII, &width, &height, &base);
 	/*
 	GrRect(dialer_wid, dialer_gc, CXOFF, CYOFF, CWIDTH, cbh);
-	GrSetGCForeground(dialer_gc, WHITE);
+	GrSetGCForeground(dialer_gc, GR_RGB(255,255,255));
 	GrFillRect(dialer_wid, dialer_gc, CXOFF+1, CYOFF+1, CWIDTH-2, cbh-2);
-	GrSetGCForeground(dialer_gc, BLACK);
+	GrSetGCForeground(dialer_gc, GR_RGB(0,0,0));
 	GrText(dialer_wid, dialer_gc, CXOFF+(CWIDTH-width-4),
 		CYOFF+((cbh/2)-(height/2)), digitdisplay, -1, GR_TFASCII|GR_TFTOP);
 	*/
@@ -443,16 +443,16 @@ static void draw_dialer() {
 	lastxlocal=CXOFF+((cbw+cxgap)*(last_bouvet_item%4));
 	lastylocal=CBYOFF+((cbh+cygap)*(last_bouvet_item/4));
 	
-	GrSetGCForeground(dialer_gc, WHITE);
+	GrSetGCForeground(dialer_gc, GR_RGB(255,255,255));
 	GrFillRect(dialer_wid, dialer_gc, lastxlocal+1, lastylocal+1, cbw-2, cbh-2);
-	GrSetGCForeground(dialer_gc, BLACK);
+	GrSetGCForeground(dialer_gc, GR_RGB(0,0,0));
 	GrGetGCTextSize(dialer_gc, dialerpad[last_bouvet_item], -1, GR_TFASCII,
 	                &width, &height, &base);
 	GrText(dialer_wid, dialer_gc,
 	       lastxlocal+((cbw/2)-(width/2)), lastylocal+((cbh/2)-(height/2)),
 	       dialerpad[last_bouvet_item], -1, GR_TFASCII|GR_TFTOP);
 	GrFillRect(dialer_wid, dialer_gc, xlocal, ylocal, cbw, cbh);
-	GrSetGCForeground(dialer_gc, WHITE);
+	GrSetGCForeground(dialer_gc, GR_RGB(255,255,255));
 	GrGetGCTextSize(dialer_gc, dialerpad[current_dialer_button], -1, GR_TFASCII,
 	                &width, &height, &base);
 	GrText(dialer_wid, dialer_gc,
@@ -585,7 +585,7 @@ static void dialer_do_draw() {
 	digitdisplay[0]='\0';
 	numfull = 0;
 	littr = 0;
-	GrSetGCForeground(dialer_gc, BLACK);
+	GrSetGCForeground(dialer_gc, GR_RGB(0,0,0));
 	for(i=0; i<=15; i++) {
 		GrGetGCTextSize(dialer_gc, dialerpad[i], -1, GR_TFASCII,
 		                &width, &height, &base);
@@ -667,7 +667,7 @@ void new_dialer_window()
 
 	dialer_gc = pz_get_gc(1);
 	GrSetGCUseBackground(dialer_gc, GR_FALSE);
-	GrSetGCForeground(dialer_gc, BLACK);
+	GrSetGCForeground(dialer_gc, GR_RGB(0,0,0));
 
 	if (screen_info.cols < 160) { //mini
 		cxgap = 3; cygap = 2;

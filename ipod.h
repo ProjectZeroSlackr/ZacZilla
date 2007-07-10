@@ -22,7 +22,7 @@
 /* Global Settings */
 
 #ifdef IPOD
-#define IPOD_SETTINGS_FILE	"/etc/podzilla.conf"
+#define IPOD_SETTINGS_FILE	"/mnt/aj/zaczilla.conf"
 #else
 #define IPOD_SETTINGS_FILE	"podzilla.conf"
 #endif
@@ -69,6 +69,7 @@
 #define DISPLAY_LOAD	(47)	/* appearance */
 #define FONT_FILE	(48)
 #define SLIDE_TRANSIT	(49)
+#define TEXT_INPUT (50)
 
 #define MIN_CONTRAST	0
 #define MAX_CONTRAST	128

@@ -18,12 +18,13 @@
 
 #include <stdio.h>
 #include <stdlib.h>
-#include <itunesdb.h>
+#include "itunesdb.h"
 
 #include "pz.h"
 #include "ipod.h"
 #include "btree.h"
 #include "itunes_db.h"
+#include "mlist.h"
 
 extern int playlistpos, playlistlength;
 
@@ -42,7 +43,7 @@ struct menulist {
 	GR_GC_ID 	 gc;
 	GR_SCREEN_INFO 	 screen_info;
 	GR_SIZE 	 gr_width, gr_height, gr_base;
-	TWidget *itunes_menu;
+	menu_st *itunes_menu;
 	char init;
 	struct menulist	*prevml;
 };
@@ -61,11 +62,11 @@ static void draw_itunes_parse(int cnt)
 
 	GrSetGCUseBackground(currentml->gc, GR_FALSE);
 	GrSetGCMode(currentml->gc, GR_MODE_SET);
-	GrSetGCForeground(currentml->gc, WHITE);
+	GrSetGCForeground(currentml->gc, GR_RGB(255,255,255));
 	GrFillRect(currentml->wid, currentml->gc, 0,
 		   3 * currentml->gr_height,
 		   currentml->screen_info.cols, currentml->gr_height);
-	GrSetGCForeground(currentml->gc, BLACK);
+	GrSetGCForeground(currentml->gc, GR_RGB(0,0,0));
 	GrText(currentml->wid, currentml->gc, 8, 3 * currentml->gr_height - 3,
 			str, -1, GR_TFASCII);
 }
@@ -84,8 +85,8 @@ struct menulist *new_ml()
 
 	ret->gc = pz_get_gc(1);
 	GrSetGCUseBackground(ret->gc, GR_FALSE);
-	GrSetGCForeground(ret->gc, BLACK);
-	GrSetGCBackground(ret->gc, BLACK);
+	GrSetGCForeground(ret->gc, GR_RGB(0,0,0));
+	GrSetGCBackground(ret->gc, GR_RGB(0,0,0));
 
 	ret->wid = pz_new_window(0, HEADER_TOPLINE + 1, ret->screen_info.cols,
 			ret->screen_info.rows - (HEADER_TOPLINE + 1),
@@ -99,8 +100,9 @@ struct menulist *new_ml()
 	ret->gr_height += 4;
 
 	GrMapWindow(ret->wid);
-	ret->itunes_menu = ttk_new_menu_widget (0, ttk_menufont, ret->wid->w, ret->wid->h);
-	ttk_window_set_title (ret->wid, "Music");
+	ret->itunes_menu = menu_init(ret->wid, "Music", 0, 0,
+			screen_info.cols, screen_info.rows -
+			(HEADER_TOPLINE + 1), NULL, NULL, UTF8);
 	ret->init = 0;
 	ret->prevml = NULL;
 
@@ -405,10 +407,7 @@ static void itunes_draw(struct menulist *ml)
 		while (currentml->get_prev(currentml))counter--;
 		do 
 		{
-			ttk_menu_item *item = calloc (1, sizeof(ttk_menu_item));
-			item->name = currentml->get_text (currentml);
-			item->sub = TTK_MENU_DONOTHING;
-			ttk_menu_append (currentml->itunes_menu, item);
+			menu_add_item(currentml->itunes_menu, currentml->get_text(currentml), NULL, 0, 0);
 			counter++;
 		}while (currentml->get_next(currentml));
 			while (counter != 0)
@@ -427,7 +426,7 @@ static void itunes_draw(struct menulist *ml)
 
 	}
 
-	ml->itunes_menu->dirty++;
+	menu_draw(currentml->itunes_menu);
 }
 
 /*
@@ -488,6 +487,9 @@ static int itunes_do_keystroke(GR_EVENT * event)
 	struct menulist *oldml;
 
 	switch (event->type) {
+	case GR_EVENT_TYPE_TIMER:
+		menu_draw_timer(currentml->itunes_menu);
+		break;
 	case GR_EVENT_TYPE_KEY_DOWN:
 		switch (event->keystroke.ch) {
 		case '\r':		/* action key */
@@ -499,15 +501,16 @@ static int itunes_do_keystroke(GR_EVENT * event)
 			ret = 1;
 			pz_close_window(currentml->wid);
 			oldml = currentml;
+			currentml->itunes_menu = menu_destroy(currentml->itunes_menu);
 			currentml = currentml->prevml;
 			free(oldml);
-			if (currentml) itunes_draw (currentml);
+			if (currentml) itunes_draw(currentml);
 			break;
 
 		case 'r':
 			if(currentml->get_next(currentml))
 			{
-				ttk_menu_scroll (currentml->itunes_menu, 1);
+				menu_shift_selected(currentml->itunes_menu, 1);
 				itunes_do_draw();
 				ret |= KEY_CLICK;
 			}
@@ -516,7 +519,7 @@ static int itunes_do_keystroke(GR_EVENT * event)
 		case 'l':
 			if(currentml->get_prev(currentml))
 			{
-				ttk_menu_scroll (currentml->itunes_menu, 1);
+				menu_shift_selected(currentml->itunes_menu, -1);
 				itunes_do_draw();
 				ret |= KEY_CLICK;
 			}

@@ -154,6 +154,7 @@ int ipod_set_setting(short setting, int value)
 	case BACKLIGHT_TIMER:
 		ipod_set_backlight_timer(value);
 		break;
+    
 	case DECORATIONS:
 		ttk_dirty |= TTK_DIRTY_HEADER;
 		appearance_set_decorations(value);
@@ -183,6 +184,10 @@ int ipod_set_setting(short setting, int value)
 		case 2:
 			ttk_set_transition_frames (8);
 			break;
+		
+		case 3:
+		    ttk_set_transition_frames(3);
+		    break;
 		}
 		break;
 	}
@@ -220,7 +225,7 @@ int ipod_load_settings(void)
 		ipod_set_setting(ACTION_DEBOUNCE, 400);
 		ipod_set_setting(DSPFREQUENCY, 0);
 		ipod_set_setting(COLORSCHEME, 0);
-		ipod_set_setting(SLIDE_TRANSIT, 1);
+		ipod_set_setting(SLIDE_TRANSIT, 2);
 	}
 
 	ipod_set_contrast(ipod_get_setting(CONTRAST));

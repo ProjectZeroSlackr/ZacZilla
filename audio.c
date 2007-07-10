@@ -67,7 +67,9 @@ static volatile int killed;
 #define DSP_PLAY_SIZE	4*1024*2
 
 static unsigned short pcm_buf[16*1024];
-
+void new_record_mic_window(void);
+void new_record_line_in_window(void);
+void new_playback_browse_window(void);
 unsigned int read_32_le(int file_fd)
 {
 	int value;
@@ -161,9 +163,9 @@ static void pcm_do_draw()
 		pz_draw_header(_("Playback"));
 	}
 
-	GrSetGCForeground(pcm_gc, WHITE);
+	GrSetGCForeground(pcm_gc, ttk_makecol(WHITE));
 	GrFillRect(pcm_wid, pcm_gc, 0, 0, screen_info.cols, screen_info.rows);
-	GrSetGCForeground(pcm_gc, BLACK);
+	GrSetGCForeground(pcm_gc, ttk_makecol(BLACK));
 
 	if (playing || recording) {
 		GrText(pcm_wid, pcm_gc, 8, 20, _("Press action to stop"), -1, GR_TFASCII);
@@ -528,8 +530,8 @@ void new_audio_window(char *filename)
 
 	pcm_gc = pz_get_gc(1);
 	GrSetGCUseBackground(pcm_gc, GR_TRUE);
-	GrSetGCForeground(pcm_gc, BLACK);
-	GrSetGCBackground(pcm_gc, WHITE);
+	GrSetGCForeground(pcm_gc, ttk_makecol(BLACK));
+	GrSetGCForeground(pcm_gc, ttk_makecol(WHITE));
 
 	pcm_wid = pz_new_window(0, HEADER_TOPLINE + 1, screen_info.cols,
 			screen_info.rows - (HEADER_TOPLINE + 1),

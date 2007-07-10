@@ -331,7 +331,7 @@ static void Clocks_secondhand( int cx, int cy, int pos, int max,
         if( Clocks_screen_info.bpp == 16 )
             GrSetGCForeground( Clocks_gc, GR_RGB( 96, 96, 0 ) );
         else
-            GrSetGCForeground( Clocks_gc, GRAY );
+            GrSetGCForeground( Clocks_gc, GR_RGB(80,80,80) );
         Analog_angular_line_offset( cx, cy, pos, max, da,
 				sz, 2,
                                 (Clocks_sel == CLOCKS_SEL_SECONDS)?1:0, 0 );
@@ -344,9 +344,9 @@ static void Clocks_center( int cx, int cy, int cd )
 	  || Clocks_style == CLOCKS_STYLE_WATCH ) {
             cd = 3;
         }
-        GrSetGCForeground( Clocks_gc, GRAY );
+        GrSetGCForeground( Clocks_gc, GR_RGB(80,80,80) );
         GrFillEllipse( Clocks_bufwid, Clocks_gc, cx, cy, cd, cd );
-        GrSetGCForeground( Clocks_gc, BLACK );
+        GrSetGCForeground( Clocks_gc, GR_RGB(0,0,0) );
         GrFillEllipse( Clocks_bufwid, Clocks_gc, cx, cy, cd-1, cd-1 );
 }
 
@@ -401,7 +401,7 @@ static void Clocks_draw_analog_clocks( struct tm *dispTime )
 			else /* 12, 3, 6, 9 */
 			    GrSetGCForeground( Clocks_gc, GR_RGB( 80, 100, 70) );
 		    } else {
-			GrSetGCForeground( Clocks_gc, LTGRAY );
+			GrSetGCForeground( Clocks_gc, GR_RGB(160,160,160) );
 		    }
 		    Analog_angular_line( cx, cy, x, 12, 
 				(x==0)?cy-6:	/* 12:00 */
@@ -411,19 +411,19 @@ static void Clocks_draw_analog_clocks( struct tm *dispTime )
 		}
 	} else if( Clocks_style == CLOCKS_STYLE_ANALOG ) {
 		/* give the illusion of anti-alisedness for the outer ring */
-		GrSetGCForeground( Clocks_gc, LTGRAY );
+		GrSetGCForeground( Clocks_gc, GR_RGB(160,160,160) );
 		GrFillEllipse( Clocks_bufwid, Clocks_gc, cx, cy, cy-1, cy-1 );
-		GrSetGCForeground( Clocks_gc, GRAY );
+		GrSetGCForeground( Clocks_gc, GR_RGB(80,80,80) );
 		GrFillEllipse( Clocks_bufwid, Clocks_gc, cx, cy, cy-2, cy-2 );
 
-		GrSetGCForeground( Clocks_gc, BLACK );
+		GrSetGCForeground( Clocks_gc, GR_RGB(0,0,0) );
 		GrFillEllipse( Clocks_bufwid, Clocks_gc, cx, cy, cy-3, cy-3 );
 
-		GrSetGCForeground( Clocks_gc, GRAY );
+		GrSetGCForeground( Clocks_gc, GR_RGB(80,80,80) );
 		GrFillEllipse( Clocks_bufwid, Clocks_gc, cx, cy, cy-4, cy-4 );
-		GrSetGCForeground( Clocks_gc, LTGRAY );
+		GrSetGCForeground( Clocks_gc, GR_RGB(160,160,160) );
 		GrFillEllipse( Clocks_bufwid, Clocks_gc, cx, cy, cy-5, cy-5 );
-		GrSetGCForeground( Clocks_gc, WHITE );
+		GrSetGCForeground( Clocks_gc, GR_RGB(255,255,255) );
 		GrFillEllipse( Clocks_bufwid, Clocks_gc, cx, cy, cy-6, cy-6 );
 	}
 
@@ -431,7 +431,7 @@ static void Clocks_draw_analog_clocks( struct tm *dispTime )
 	if( Clocks_screen_info.bpp == 16 )
 	    GrSetGCForeground( Clocks_gc, GR_RGB( 0, 128, 0 ));
 	else 
-	    GrSetGCForeground( Clocks_gc, LTGRAY );
+	    GrSetGCForeground( Clocks_gc, GR_RGB(160,160,160) );
 	if( Clocks_style == CLOCKS_STYLE_ANALOG ) {
 		/* horizontal */
 		GrLine( Clocks_bufwid, Clocks_gc, 
@@ -462,18 +462,18 @@ static void Clocks_draw_analog_clocks( struct tm *dispTime )
 	    tw2 = tw>>1;
 
 	    /* draw the background-matching backing box */
-	    GrSetGCForeground( Clocks_gc, WHITE );
+	    GrSetGCForeground( Clocks_gc, GR_RGB(255,255,255) );
 	    GrFillRect( Clocks_bufwid, Clocks_gc, wq3-tw2-3, cy-7, tw+6, 15);
 
 	    /* draw a box the same color as the lines, like above */
 	    if( Clocks_screen_info.bpp == 16 )
 		GrSetGCForeground( Clocks_gc, GR_RGB( 0, 128, 0 ));
 	    else 
-		GrSetGCForeground( Clocks_gc, LTGRAY );
+		GrSetGCForeground( Clocks_gc, GR_RGB(160,160,160) );
 	    GrRect( Clocks_bufwid, Clocks_gc, wq3-tw2-3, cy-7, tw+6, 15);
 
 	    /* and finally render the text */
-	    GrSetGCForeground( Clocks_gc, BLACK );
+	    GrSetGCForeground( Clocks_gc, GR_RGB(0,0,0) );
 	    vector_render_string_center( Clocks_bufwid, Clocks_gc, 
 			buf, 1, 1, wq3, cy );
 	}
@@ -491,7 +491,7 @@ static void Clocks_draw_analog_clocks( struct tm *dispTime )
 	if( Clocks_screen_info.bpp == 16 )
 	    GrSetGCForeground( Clocks_gc, GR_RGB( 0, 45, 0 ) );
 	else
-	    GrSetGCForeground( Clocks_gc, GRAY );
+	    GrSetGCForeground( Clocks_gc, GR_RGB(80,80,80) );
 	Analog_angular_line( cx, cy,
 				(dispTime->tm_min*60)+dispTime->tm_sec, 60*60,
 				lm, 
@@ -501,7 +501,7 @@ static void Clocks_draw_analog_clocks( struct tm *dispTime )
 	if( Clocks_screen_info.bpp == 16 )
 	    GrSetGCForeground( Clocks_gc, GR_RGB( 0, 96, 0 ) );
 	else
-	    GrSetGCForeground( Clocks_gc, BLACK );
+	    GrSetGCForeground( Clocks_gc, GR_RGB(0,0,0) );
 	Analog_angular_line( cx, cy,
 				(dispTime->tm_min*60)+dispTime->tm_sec, 60*60,
 				lm, 
@@ -512,7 +512,7 @@ static void Clocks_draw_analog_clocks( struct tm *dispTime )
 	if( Clocks_screen_info.bpp == 16 )
 	    GrSetGCForeground( Clocks_gc, GR_RGB( 0, 45, 0 ) );
 	else
-	    GrSetGCForeground( Clocks_gc, GRAY );
+	    GrSetGCForeground( Clocks_gc, GR_RGB(80,80,80) );
 	Analog_angular_line( cx, cy, 
 				(dispTime->tm_hour*60)+dispTime->tm_min, 12*60,
 				lh, 
@@ -523,7 +523,7 @@ static void Clocks_draw_analog_clocks( struct tm *dispTime )
 	if( Clocks_screen_info.bpp == 16 )
 	    GrSetGCForeground( Clocks_gc, GR_RGB( 0, 96, 0 ) );
 	else
-	    GrSetGCForeground( Clocks_gc, BLACK );
+	    GrSetGCForeground( Clocks_gc, GR_RGB(0,0,0) );
 	Analog_angular_line( cx, cy, 
 				(dispTime->tm_hour*60)+dispTime->tm_min, 12*60,
 				lh, 
@@ -596,11 +596,11 @@ static void Clocks_draw_vector_clock( struct tm *dispTime )
         }
 
         /* clear the screen */
-        GrSetGCForeground( Clocks_gc, WHITE);
+        GrSetGCForeground( Clocks_gc, GR_RGB(255,255,255));
         GrFillRect( Clocks_bufwid, Clocks_gc, 0, 0, w, h);
 
         /* draw some text */
-        GrSetGCForeground( Clocks_gc, BLACK);
+        GrSetGCForeground( Clocks_gc, GR_RGB(0,0,0));
 
         sprintf( buf, "%02d:%02d:%02d",
 			Clocks_convert_to_12( dispTime->tm_hour ),
@@ -612,7 +612,7 @@ static void Clocks_draw_vector_clock( struct tm *dispTime )
 	if( Clocks_sel != CLOCKS_SEL_DISPLAY ) {
 		char * fmtt = "";
 		char * fmtd = "";
-		GrSetGCForeground( Clocks_gc, GRAY );
+		GrSetGCForeground( Clocks_gc, GR_RGB(80,80,80) );
 
 		if( Clocks_sel == CLOCKS_SEL_HOURS ) {
 			fmtt = "%c%c      ";
@@ -650,7 +650,7 @@ static void Clocks_draw_vector_clock( struct tm *dispTime )
 
 	}
 
-	GrSetGCForeground( Clocks_gc, BLACK );
+	GrSetGCForeground( Clocks_gc, GR_RGB(0,0,0) );
 	strftime( buf, 80, "%Y %b %d", dispTime );
 
         vector_render_string_center( Clocks_bufwid, Clocks_gc,
@@ -690,9 +690,9 @@ static void Clocks_draw_nibble_vert( int x, int val )
 	for( vc=0 ; vc<4 ; vc++ )
 	{
 		Clocks_draw_light( x+r, r+4+((ld+3)*vc), r-2,
-			(val & 0x08)? WHITE : BLACK,
-			(val & 0x08)? GR_RGB( 255, 0, 0 ) : BLACK,
-			GRAY, GR_RGB( 100, 0, 0 ) );
+			(val & 0x08)? GR_RGB(255,255,255) : GR_RGB(0,0,0),
+			(val & 0x08)? GR_RGB( 255, 0, 0 ) : GR_RGB(0,0,0),
+			GR_RGB(80,80,80), GR_RGB( 100, 0, 0 ) );
 		val = val << 1;
 	}
 }
@@ -726,9 +726,9 @@ static void Clocks_draw_6bit_horiz( int y, int val )
 	for( vc=0 ; vc<6 ; vc++ )
 	{
 		Clocks_draw_light( 2+r+vc*xv, y, r-2,
-			(val & 0x20)? WHITE : BLACK,
-			(val & 0x20)? GR_RGB( 255, 0, 0 ) : BLACK,
-			GRAY, GR_RGB( 100, 0, 0 ) );
+			(val & 0x20)? GR_RGB(255,255,255) : GR_RGB(0,0,0),
+			(val & 0x20)? GR_RGB( 255, 0, 0 ) : GR_RGB(0,0,0),
+			GR_RGB(80,80,80), GR_RGB( 100, 0, 0 ) );
 		val = val << 1;
 	}
 }
@@ -760,9 +760,9 @@ static void Clocks_draw_4bit_horiz( int y, int val )
 		}
 
 		Clocks_draw_light( xp, y, r-2,
-			(val & 0x08)? WHITE : BLACK,
-			(val & 0x08)? GR_RGB( 255, 0, 0 ) : BLACK,
-			GRAY, GR_RGB( 100, 0, 0 ) );
+			(val & 0x08)? GR_RGB(255,255,255) : GR_RGB(0,0,0),
+			(val & 0x08)? GR_RGB( 255, 0, 0 ) : GR_RGB(0,0,0),
+			GR_RGB(80,80,80), GR_RGB( 100, 0, 0 ) );
 		val = val << 1;
 	}
 }
@@ -857,9 +857,9 @@ static void Clocks_draw_7segment( int x, int y, int w, int h, char value,
 static void Clocks_draw_digital_clock( struct tm * dispTime )
 {
 	GR_COLOR dark  = (Clocks_screen_info.bpp == 16)?
-			GR_RGB( 60, 0, 0) : GRAY;
+			GR_RGB( 60, 0, 0) : GR_RGB(80,80,80);
 	GR_COLOR light = (Clocks_screen_info.bpp == 16)?
-			GR_RGB( 255, 0, 0 ) : WHITE;
+			GR_RGB( 255, 0, 0 ) : GR_RGB(255,255,255);
 	char buf[8];
 	int w2 = Clocks_screen_info.cols/2;
 	int w3 = Clocks_screen_info.cols/3;
@@ -873,7 +873,7 @@ static void Clocks_draw_digital_clock( struct tm * dispTime )
 
 	int h = Clocks_convert_to_12( dispTime->tm_hour );
 
-	if( Clocks_screen_info.bpp != 16 ) dark = BLACK;
+	if( Clocks_screen_info.bpp != 16 ) dark = GR_RGB(0,0,0);
 
 	snprintf( buf, 8, "%2d", h );
 	Clocks_draw_7segment( (w5*1)-wA-8, h2p, w5-3, w3,
@@ -921,11 +921,11 @@ static void Clocks_draw( void )
 
         current_time = localtime( &t );
 
-        /* start clear (WHITE) */
+        /* start clear (GR_RGB(255,255,255)) */
 	if( Clocks_style >= CLOCKS_STYLE_BCD )
-	    GrSetGCForeground( Clocks_gc, BLACK );
+	    GrSetGCForeground( Clocks_gc, GR_RGB(0,0,0) );
 	else
-	    GrSetGCForeground( Clocks_gc, WHITE );
+	    GrSetGCForeground( Clocks_gc, GR_RGB(255,255,255) );
         GrFillRect( Clocks_bufwid, Clocks_gc, 0, 0,
                     Clocks_screen_info.cols, Clocks_height );
 
@@ -1216,7 +1216,7 @@ static void new_Clocks_window_common(void)
 
 	Clocks_gc = GrNewGC();
         GrSetGCUseBackground(Clocks_gc, GR_FALSE);
-        GrSetGCForeground(Clocks_gc, BLACK);
+        GrSetGCForeground(Clocks_gc, GR_RGB(0,0,0));
 
 	Clocks_height = (screen_info.rows - (HEADER_TOPLINE + 1));
 

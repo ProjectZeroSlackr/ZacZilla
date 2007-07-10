@@ -124,9 +124,9 @@ static void tzx_do_draw()
 {
 	pz_draw_header("Playback");
 
-	GrSetGCForeground(tzx_gc, WHITE);
+	GrSetGCForeground(tzx_gc, ttk_makecol(WHITE));
 	GrFillRect(tzx_wid, tzx_gc, 0, 0, screen_info.cols, screen_info.rows);
-	GrSetGCForeground(tzx_gc, BLACK);
+	GrSetGCForeground(tzx_gc, ttk_makecol(BLACK));
 
 	if (playing) {
 		GrText(tzx_wid, tzx_gc, 8, 20, _("Press action to stop"), -1, GR_TFASCII);
@@ -791,8 +791,8 @@ void new_tzx_audio_window(char *filename)
 
 	tzx_gc = pz_get_gc(1);
 	GrSetGCUseBackground(tzx_gc, GR_TRUE);
-	GrSetGCForeground(tzx_gc, BLACK);
-	GrSetGCBackground(tzx_gc, WHITE);
+	GrSetGCForeground(tzx_gc, ttk_makecol(BLACK));
+	GrSetGCBackground(tzx_gc, ttk_makecol(WHITE));
 
 	tzx_wid = pz_new_window(0, HEADER_TOPLINE + 1, screen_info.cols,
 			screen_info.rows - (HEADER_TOPLINE + 1),
