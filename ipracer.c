@@ -117,7 +117,8 @@ static void write_high()
          FILE *fp;
 	 char filename[30];
 	 int t = 0;
-	     	sprintf(filename, "%smap%d.ipr",direc,mapc);
+	 
+    	sprintf(filename, "%smap%d.ipr",direc,mapc);
 
 	 	 if(!(fp = fopen(filename, "r"))){
        		  	new_message_window("Could not Open Map");
@@ -157,8 +158,11 @@ static void find_dir()
 
 	FILE *fp;
 
-	sprintf(direc, "/hp/aj/iracer_maps/");
-	if(!(fp = fopen(direc, "r"))) {
+	// KERIPO MOD
+	//sprintf(direc, "/hp/aj/iracer_maps/");
+	sprintf(direc, "/opt/Zillae/ZacZilla/Data/iracer_maps/");
+
+	if(!(fp = fopen(direc, "r"))) {
     		sprintf(direc, "/mnt/iracer_maps/");
 	
 
@@ -228,7 +232,8 @@ static void load_map()
 
 	 	 if(!(fp = fopen(filename, "r"))){
        		  	new_message_window("Could not Open map");
-		 }
+		 }
+
 	for(t=0;t<3;t++){ //flush times incase == 0 for no high time.
 		map.cc50[t] = 0;
 		map.cc100[t] = 0;
@@ -297,7 +302,8 @@ static void load_map()
 	map.image = ttk_scale_surface(map.image,ipod);
 
 	fclose(fp);
-			cpos=map.cstart; //give track direction 
+		
+	cpos=map.cstart; //give track direction 
 		  
 }
 
@@ -321,19 +327,23 @@ static void load_car()
    	 	sprintf(file, "%s%d.gif",filename,x);
     		car[x] = ttk_load_image(file);
 	 }
-	    
+	    
+
 }
 
 static void load_images()
 {
-	 menu_bg = ttk_load_image ("/mnt/aj/bg.gif");
-	 menu_sbg = ttk_load_image ("/mnt/aj/sbg.gif");
-	 menu_wheel = ttk_load_image ("/mnt/aj/wheel.gif");
+	 menu_bg = ttk_load_image ("/opt/Zillae/ZacZilla/Data/bg.gif");
+	 menu_sbg = ttk_load_image ("/opt/Zillae/ZacZilla/Data/sbg.gif");
+	 menu_wheel = ttk_load_image ("/opt/Zillae/ZacZilla/Data/wheel.gif");
 	 	 
 }
 
 
-static int load_settings()
+// KERIPO MOD
+// Conflicts with main settings functions
+//static int load_settings()
+static int ipr_load_settings()
 {
 	 FILE *fp;
 	 char filename[30];
@@ -356,7 +366,10 @@ static int load_settings()
 }
 
 
-static void save_settings() 
+// KERIPO MOD
+// Conflicts with main settings
+//static void save_settings() 
+static void ipr_save_settings() 
 {
 	 FILE *fp;
 	 char filename[30];
@@ -377,16 +390,21 @@ static void save_settings()
   	 frame=0;	
   	 option=0;
 
-   }
+   
+}
 
 static void iracer_startup()
-{	  load_settings();
+{
+	  // KERIPO MOD
+	  //load_settings();
+	  ipr_load_settings();
 	  load_car(); 
 	  load_map();
 	  load_images();
 	  iracer_scale_images();
 
-	 FILE *fp;	 
+	 FILE *fp;
+	 
 	if(!(fp = fopen(direc, "r"))){
 	new_message_window("Couldn't Find iracer Folder"); 
 	}
@@ -409,7 +427,8 @@ for (t=-1;t<=1;t++){
   
 	d=d2+t; 
 	e=e2+t;
-	d+=(map.xstart+(xoff*speed));
+
+	d+=(map.xstart+(xoff*speed));
 	e+=(map.ystart+(yoff*speed));
 
 	c = ttk_getpixel(iracer_srf,ipods[d],ipods[e]);
@@ -850,7 +869,9 @@ static int down_iracer (TWidget *this,int button)
       	   	 case 0: break;
       	   	 case 1: break;
       	   	 case 2: break;
-      	   	 case 3: save_settings(); break;
+			 // KERIPO MOD
+			 //case 3: save_settings(); break;
+      	   	 case 3: ipr_save_settings(); break;
       	   }
       	 }
 this	 ->dirty++;

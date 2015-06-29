@@ -48,6 +48,9 @@ int pz_new_event_handler (int, int, int);
 TWindow *pz_mh_legacy (ttk_menu_item *);
 int readHighScore(char *SAVEFILE);
 void writeHighScore(char *SAVEFILE,int highScore);
+void pz_vector_string(ttk_surface srf, const char *string, int x, int y, int cw, int ch, int kern, ttk_color col);
+void pz_vector_string_center(ttk_surface srf, const char *string, int x, int y, int cw, int ch, int kern, ttk_color col);
+int pz_vector_width (const char *string, int cw, int ch, int kern);
 /* header.c */
 void pz_hwid_pack_left (TWidget *wid);
 void pz_hwid_pack_right (TWidget *wid);
@@ -78,7 +81,7 @@ void pz_perror(char *msg);
 int dialog_create( const char * title, const char * text,
                 const char * button0, const char * button1, const char * button2,
                 int timeout, int is_error );
-    /* use the following macros though... */
+/* use the following macros though... */
 
 /* no timeout, messages */
 #define DIALOG_MESSAGE( title, text, button )\

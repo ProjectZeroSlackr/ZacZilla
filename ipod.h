@@ -22,9 +22,11 @@
 /* Global Settings */
 
 #ifdef IPOD
-#define IPOD_SETTINGS_FILE	"/mnt/aj/zaczilla.conf"
-#else
-#define IPOD_SETTINGS_FILE	"podzilla.conf"
+// KERIPO MOD
+//#define IPOD_SETTINGS_FILE	"Data/zaczilla.conf"
+//#else
+//#define IPOD_SETTINGS_FILE	"podzilla.conf"
+#define IPOD_SETTINGS_FILE	"/opt/Zillae/ZacZilla/Conf/zaczilla.conf"
 #endif
 
 /* DISPLAY SETINGS 0 - 9 */

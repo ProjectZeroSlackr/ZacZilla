@@ -243,6 +243,9 @@ int tix_run_callback(TWidget * wid, char * fn)
 	return 0;
 }
 
+// KERIPO MOD
+// Obsolete
+/*
 TWindow * new_run_window()
 {
 	TWindow * ret;
@@ -260,6 +263,7 @@ ttk_show_window(ret);
 	ti_widget_start(wid);
 	return 0;
 }
+*/
 
 /* ===== MODULE INIT ===== 
 

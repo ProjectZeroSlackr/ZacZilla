@@ -220,7 +220,9 @@ int ipod_load_settings(void)
 		}
 
 		ipod_set_setting(CONTRAST, 96);
-		ipod_set_setting(CLICKER, 1);
+		// KERIPO MOD
+		//ipod_set_setting(CLICKER, 1);
+		ipod_set_setting(CLICKER, 0);
 		ipod_set_setting(WHEEL_DEBOUNCE, 10);
 		ipod_set_setting(ACTION_DEBOUNCE, 400);
 		ipod_set_setting(DSPFREQUENCY, 0);

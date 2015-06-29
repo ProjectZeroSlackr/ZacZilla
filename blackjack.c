@@ -37,9 +37,11 @@
 
 //Save file
 #ifdef IPOD
-	#define SAVEFILE "/home/.blackjack"
-#else
-	#define SAVEFILE ".blackjack"
+// KERIPO MOD
+	//#define SAVEFILE "/home/.blackjack"
+//#else
+	//#define SAVEFILE ".blackjack"
+#define SAVEFILE "/opt/Zillae/ZacZilla/Data/blackjack.txt"
 #endif
 
 //Defines

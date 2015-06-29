@@ -430,7 +430,7 @@ void ti_dial_init()
 	ti_register(ti_dial_dtcreate, ti_dial_dtncreate, N_("Scroll with Return"), 8);
 	ti_register(ti_dial_ftcreate, ti_dial_ftncreate, N_("Scroll with Fixed Layout"), 20);
 	ti_register(ti_dial_ptcreate, ti_dial_ptncreate, N_("Scroll with Prediction"), 21);
-	//ti_dial_predict_load("/mnt/aj/predict.txt");
+	//ti_dial_predict_load("Data/predict.txt");
 }
 
 //PZ_MOD_INIT(ti_dial_init)

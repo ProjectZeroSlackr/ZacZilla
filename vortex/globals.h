@@ -103,6 +103,6 @@ typedef struct {
 extern VORTEX_GLOBALS Vortex_globals;
 
 /* these should be somewhere common... */
-#define MIN(A,B) (((A)>(B))?(B):(A))
-#define MAX(A,B) (((A)<(B))?(B):(A))
+#define VMIN(A,B) (((A)>(B))?(B):(A))
+#define VMAX(A,B) (((A)<(B))?(B):(A))
 

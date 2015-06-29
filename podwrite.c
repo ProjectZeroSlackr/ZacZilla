@@ -86,7 +86,7 @@ TWindow * podwrite_mh_save(ttk_menu_item * item)
 	TWindow * ret;
 	TWidget * wid;
 	ret = ttk_new_window(_("Save to..."));
-	wid = ti_new_standard_text_widget(10, 40, ret->w-20, 10+ttk_text_height(ttk_textfont), 0, (podwrite_filename?podwrite_filename:"/mnt/"), podwrite_save_callback);
+	wid = ti_new_standard_text_widget(10, 40, ret->w-20, 10+ttk_text_height(ttk_textfont), 0, (podwrite_filename?podwrite_filename:"/mnt/Notes/"), podwrite_save_callback);
 	ttk_add_widget(ret, wid);
 //	ret = pz_finish_window(ret);
 ttk_show_window(ret);

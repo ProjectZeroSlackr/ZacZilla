@@ -271,7 +271,8 @@ void money_deal()
 {
     srand(time(NULL));
 
-	zero = random() % 26;	   	bcase[zero] = 0;
+	zero = random() % 26;	   
+	bcase[zero] = 0;
 
     for (i = 0; i <= 25; i++)
       {
@@ -358,7 +359,8 @@ if (briefnum==(-5)){
 
 	else
 	{ttk_blit_image(intro[in], srf,w-(in2*2), wid->y + (wid->h - 100) / 2);}
-}
+}
+
 
 else if (w<=180&&w>=165)
 {
@@ -1352,12 +1354,12 @@ TWindow *new_deal_window()
 
     for (i = 0; i <= 10; i++)
       {
-	  sprintf(file, "/mnt/aj/ideal/%d.gif", i);
+	  sprintf(file, "/opt/Zillae/ZacZilla/Data/ideal/%d.gif", i);
 	  image[i] = ttk_load_image(file);
       }
     for (i = 0; i <= 3; i++)
       {
-	  sprintf(file, "/mnt/aj/ideal/0%d.gif", i);
+	  sprintf(file, "/opt/Zillae/ZacZilla/Data/ideal/0%d.gif", i);
 	  intro[i] = ttk_load_image(file);
       }
     window = ttk_new_window("iDeal or No Deal");

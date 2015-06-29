@@ -29,7 +29,9 @@
 #include "../ipod.h"
 #include "../pz.h"
 
-#define HIGHSCORE ".bluecube"
+// KERIPO MOD
+//#define HIGHSCORE ".bluecube"
+#define HIGHSCORE "/opt/Zillae/ZacZilla/Data/bluecube.txt"
 
 static void tetris_do_draw(void);
 static int tetris_do_keystroke(GR_EVENT *);

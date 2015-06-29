@@ -511,7 +511,8 @@ TWindow *new_about_window()
 
     about_render (data->dblbuf, ret->w - 10*data->scroll);
     ttk_add_widget (win, ret);
-  ttk_show_window (win);
+    ttk_show_window (win);
+    return NULL;
 }
 
 

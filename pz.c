@@ -335,8 +335,7 @@ int pz_start_input() { return ttk_input_start (handler()); }
 int pz_start_input_n() { return ttk_input_start (handler_n()); }
 int pz_start_input_for (TWindow *win) { return ttk_input_start_for (win, handler()); }
 int pz_start_input_n_for (TWindow *win) { return ttk_input_start_for (win, handler_n()); }
-void pz_vector_string_center (ttk_surface srf, const char *string, int x, int y, int cw, int ch,
-			      int kern, ttk_color col) 
+void pz_vector_string_center (ttk_surface srf, const char *string, int x, int y, int cw, int ch, int kern, ttk_color col)
 {
     int w = pz_vector_width (string, cw, ch, kern);
     x -= w/2;
@@ -344,7 +343,7 @@ void pz_vector_string_center (ttk_surface srf, const char *string, int x, int y,
     pz_vector_string (srf, string, x, y, cw, ch, kern, col);
 }
 
-int pz_vector_width (const char *string, int cw, int ch, int kern) 
+int pz_vector_width (const char *string, int cw, int ch, int kern)
 {
     return (strlen (string) * cw) + ((strlen (string) - 1) * (cw/8 + kern + 1));
 }
@@ -470,9 +469,9 @@ int readHighScore(char *SAVEFILE)
 	if ((input = fopen(SAVEFILE, "r")) == NULL)
 	{
 		perror(SAVEFILE);
-		return;
+		return -1;
 	}
-	fscanf(input, "%ld", &highScore); 
+	fscanf(input, "%d", &highScore); 
 	fclose(input);
 	return highScore;
 }
@@ -486,7 +485,7 @@ void writeHighScore(char *SAVEFILE,int highScore)
 		perror(SAVEFILE);
 		return;
 	}
-	fprintf(output, "%ld", highScore);
+	fprintf(output, "%d", highScore);
 	fclose(output);
 }
 
@@ -788,7 +787,9 @@ extern char *pz_next_header;
 
 GR_WINDOW_ID pz_new_window (int x, int y, int w, int h, void(*do_draw)(void), int(*do_keystroke)(GR_EVENT * event))
 {
-    fprintf (stderr, "Legacy code alert!\n");
+    // KERIPO MOD
+    // We know ; P
+    //fprintf (stderr, "Legacy code alert!\n");
 
     TWindow *ret = ttk_new_window();
     ttk_fillrect (ret->srf, 0, 0, ret->w, ret->h, ttk_makecol (255, 255, 255));
@@ -841,14 +842,33 @@ void pz_set_time_from_file(void)
 #endif
 }
 
-int
-main(int argc, char **argv)
+#ifdef IPOD
+#define SCHEMESDIR "/usr/share/schemes/"
+#define SCHEMECONF "/opt/Zillae/ZacZilla/Conf/scheme.conf"
+#else
+#define SCHEMESDIR "schemes/"
+#define SCHEMECONF "scheme.conf"
+#endif
+
+int main(int argc, char **argv)
 {
+	// KERIPO MOD
+	if (access(SCHEMECONF, F_OK) < 0) {
+		FILE *fconf;
+		if ((fconf = fopen(SCHEMECONF, "w")) == NULL) {
+			perror(SCHEMECONF);
+			return -1;
+		}
+		fprintf(fconf, "%s%s", SCHEMESDIR, "familiar.cs");
+		fclose(fconf);
+	}
+	
 #ifdef IPOD
 	FILE *fp;
 	pz_startup_contrast = ipod_get_contrast();
 #endif
-    system("rm /mnt/debug*");
+// KERIPO MOD
+    //system("rm /mnt/debug*");
 	if ((root_wid = ttk_init()) == 0) {
 	    fprintf(stderr, _("ttk_init failed"));
 	    exit(1);
@@ -882,14 +902,15 @@ main(int argc, char **argv)
 	////fprintf(fp,"settings");
 	////fclose(fp);
  //fp=//fopen("/mnt/debug2.txt","w");
-	system("cp /mnt/aj/schemes/* /usr/share/schemes/");
+// KERIPO MOD
+	//system("cp Data/schemes/* /usr/share/schemes/");
 	//fprintf(fp,"cp");
 	//fclose(fp);
  //fp=//fopen("/mnt/debug3.txt","w");
-#ifdef MPDC	
-	system("/mnt/aj/mpd  --update-db");
-	system("/mnt/aj/mpd");
-#endif	
+//#ifdef MPDC	
+	//system("/opt/MPD/MPD-ke /opt/MPD/Conf/mpd.conf --update-db");
+	//system("/opt/MPD/MPD-ke /opt/MPD/Conf/mpd.conf");
+//#endif	
 	load_font();
 	appearance_init();
 	//fprintf(fp,"apper");
@@ -902,7 +923,7 @@ main(int argc, char **argv)
 	//fprintf(fp,"header");
 	//fclose(fp);
  //fp=//fopen("/mnt/debug.txt","w");
-	iconui_init();
+	//iconui_init();
 ti_init();
 //fprintf(fp,"tiinit");
 //fclose(fp);
@@ -930,6 +951,7 @@ ti_init();
 	quit_podzilla();
     //fprintf(fp,"quit");
     //fclose(fp);
-    system("/mnt/podzilla2");
+// KERIPO MOD
+    //system("/mnt/podzilla2");
 	return 0;
 }

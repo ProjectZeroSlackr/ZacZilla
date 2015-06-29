@@ -35,9 +35,11 @@ static GR_WINDOW_INFO wi;
 static GR_WINDOW_ID temp_pixmap;
 
 #ifdef IPOD
-#define SAVEFILE "/home/.tunnel"
-#else
-#define SAVEFILE ".tunnel"
+// KERIPO MOD
+//#define SAVEFILE "/home/.tunnel"
+//#else
+//#define SAVEFILE ".tunnel"
+#define SAVEFILE "/opt/Zillae/ZacZilla/Data/tunnel.txt"
 #endif
 
 // Timer stuff

@@ -302,6 +302,8 @@ static void handle_type_other(char *filename,char *filefull)
 		new_video_window(filename);
 		
 	}
+	// KERIPO MOD
+	/*
 	else if(is_nes_type) {
 	  char *filez;
 	
@@ -309,11 +311,12 @@ static void handle_type_other(char *filename,char *filefull)
 	  chdir("/mnt/");
 	  system(filez);
 	 // browser_exec_file(filez);
-	 // sprintf(filez,"exec /mnt/aj/darcnes %s",filefull);
+	 // sprintf(filez,"exec Data/darcnes %s",filefull);
 	 // system(filez);
 	  //browser_pipe_execn(filez);
 	// new_message_window(filez);
 	 }
+	*/
 	else if (is_script_type(ext)) {
 		browser_exec_file(filename);
 	}
@@ -688,7 +691,9 @@ void new_exec_window(char *filename)
 	int i, tty0_fd, ttyfd = -1, oldvt, curvt, fd, status;
 	pid_t pid;
 
-	FILE *bdbg = fopen ("/etc/browser.dbg", "w");
+	// KERIPO MOD
+	//FILE *bdbg = fopen ("/etc/browser.dbg", "w");
+	FILE *bdbg = fopen ("/opt/Zillae/ZacZilla/Misc/browser.dbg", "w");
 	setbuf (bdbg, 0);
 	fprintf (bdbg, "\nnew_exec_window()\n");
 	int bdbgfd = fileno (bdbg);

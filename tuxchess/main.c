@@ -16,7 +16,9 @@
 #include "../ipod.h"
 #include "../pz.h"
 
-#define LASTGAME ".tuxchess"
+// KERIPO MOD
+//#define LASTGAME ".tuxchess"
+#define LASTGAME "/opt/Zillae/ZacZilla/Data/tuxchess.txt"
 
 #define TITLE 		"TuxChess"
 #define SCANCODES	64

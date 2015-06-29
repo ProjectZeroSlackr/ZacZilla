@@ -136,12 +136,12 @@ extern vortex_globals vglob;
 
 /* now some useful generic and utility stuff... */
 
-#ifndef MIN
-#define MIN(A,B) (((A)>(B))?(B):(A))
+#ifndef VMIN
+#define VMIN(A,B) (((A)>(B))?(B):(A))
 #endif
 
-#ifndef MAX
-#define MAX(A,B) (((A)<(B))?(B):(A))
+#ifndef VMAX
+#define VMAX(A,B) (((A)<(B))?(B):(A))
 #endif 
 
 int Vortex_Rand( int max );

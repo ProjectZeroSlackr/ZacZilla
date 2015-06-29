@@ -39,27 +39,27 @@ TARGETFLAG=ipod
 CC= arm-uclinux-elf-gcc
 CFLAGS= -DIPOD -D__linux__ -lintl
 LDFLAGS= -Wl,-elf2flt -lintl
-LIBITUNESDB= ../libitunesdb/ipod/src
-LIBMPDCLIENT= ../libmpdclient/ipod
-IPP= ../ipp
-AACDEC= ../helix-aacdec/ipod
-MP4FF=../mp4ff/ipod
+LIBITUNESDB= ../libs/libitunesdb/ipod/src
+LIBMPDCLIENT= ../libs/libmpdclient/ipod
+IPP= ../libs/ipp
+AACDEC= ../libs/helix-aacdec/ipod
+MP4FF=../libs/mp4ff/ipod
 
 CFLAGS= -I$(IPP)/include -I$(AACDEC)/pub -I$(MP4FF)
-CFLAGS+= `ttk-config --$(TARGETFLAG) --$(GFXLIBFLAG) --cflags` -lintl
+CFLAGS+= `../ttk/ttk-config-here --$(TARGETFLAG) --$(GFXLIBFLAG) --cflags` -lintl
 
-LDFLAGS+=`ttk-config --$(TARGETFLAG) --$(GFXLIBFLAG) --libs` -lintl
+LDFLAGS+=`../ttk/ttk-config-here --$(TARGETFLAG) --$(GFXLIBFLAG) --libs` -lintl
 
 else
 CC=gcc
-CFLAGS+= -I$(IPP)/include  `ttk-config --$(TARGETFLAG) --$(GFXLIBFLAG) --cflags`
-LDFLAGS+= `ttk-config --$(TARGETFLAG) --$(GFXLIBFLAG) --libs`
-LIBITUNESDB= ../libitunesdb/ipod-x11/src
-LIBMPDCLIENT= ../libmpdclient/ipod-x11
+CFLAGS+= -I$(IPP)/include  `../ttk/ttk-config-here --$(TARGETFLAG) --$(GFXLIBFLAG) --cflags`
+LDFLAGS+= `../ttk/ttk-config-here --$(TARGETFLAG) --$(GFXLIBFLAG) --libs`
+LIBITUNESDB= ../libs/libitunesdb/ipod-x11/src
+LIBMPDCLIENT= ../libs/libmpdclient/ipod-x11
 ifneq ($(shell "arch"),ppc)
   # if not ppc or x86, change ppc with output from 'arch'
-  AACDEC= ../helix-aacdec/ipod-x11
-  MP4FF=../mp4ff/ipod-x11
+  AACDEC= ../libs/helix-aacdec/ipod-x11
+  MP4FF=../libs/mp4ff/ipod-x11
   CFLAGS+= -DUSE_HELIXAACDEC -I$(AACDEC)/pub -I$(MP4FF)
   LDFLAGS+= $(AACDEC)/libaacdec.a \
             $(MP4FF)/libmp4ff.a
@@ -133,13 +133,6 @@ OBJS=\
 	vortex/vortex.o \
 	vortex/globals.o \
 	vortex/gameobjs.o \
-	Steroids/asteroid.o \
-	Steroids/main.o \
-	Steroids/object.o \
-	Steroids/polygon.o \
-	Steroids/ship.o \
-	Steroids/shot.o \
-	Steroids/vector.o \
 	bluecube/box.o \
 	bluecube/main.o \
 	bluecube/pieces.o \
@@ -157,46 +150,27 @@ OBJS=\
 	factor.o \
 	mlist.o \
 	browser.o \
-	sudoku.o \
 	memoryg.o \
 	plasma.o \
 	mystify.o \
 	capture.o \
 	1dtetris.o \
 	chopper2.o \
-	brickm.o \
 	bridget.o \
-	4wins.o \
 	craps.o \
 	colorpicker.o \
-	duckhunt.o	\
 	invaders2.o \
 	reflex.o \
-	curve.o \
 	ouch.o \
 	ideal.o \
-	iconui/iconui.o \
-	iconui/iconmenu.o \
-	iconui/bigiconmenu.o \
-	iconui/icon2menu.o \
-	iconui/bigicon2menu.o \
-	iconui/dockmenu.o \
-	iconui/smdockmenu.o \
-	iconui/mdockmenu.o \
-	izilla/izilla.o \
-	izilla/usb.o \
 	usvsthem.o \
 	textinput.o \
-	tim/tidial.c \
+	tim/tidial.o \
 	tixtensions.o \
 	piezomaker.o \
-	iPodAval.o \
 	tim/titup.o \
 	podwrite.o \
-	ipracer.o \
 	terminal.o \
-	engine3d.o \
-	enginea.o
 	
 	
 
@@ -266,17 +240,28 @@ OBJS+= \
 	mpdc/menu.o \
 	mpdc/playing.o \
 	mpdc/submenu.o
-elseifneq ($(MPDM),)
-
-OBJS+= mpdm/libmpdclient.o mpdm/mpdc.o mpdm/playing.o mpdm/menu.o mpdm/queue.o mpdm/album.o mpdm/artist.o mpdm/genre.o mpdm/playlist.o mpdm/song.o
+else
+ifneq ($(MPDM),)
+OBJS+= mpdm/libmpdclient.o \
+	mpdm/mpdc.o \
+	mpdm/playing.o \
+	mpdm/menu.o \
+	mpdm/queue.o \
+	mpdm/album.o \
+	mpdm/artist.o \
+	mpdm/genre.o \
+	mpdm/playlist.o \
+	mpdm/song.o
 endif
+endif
+
 all: ZacZilla
 
 ZacZilla: $(OBJS) Makefile
 	$(CC) $(OBJS) -o ZacZilla $(CFLAGS) $(LDFLAGS)
 
 clean: 
-	$(RM) $(OBJS) *~ podzilla podzilla.gdb podzilla.pot zaczilla zaczilla.gdb zaczilla.pot
+	$(RM) $(OBJS) *~ ZacZilla ZacZilla.gdb ZacZilla.pot
 
 translate:
-	xgettext -kN_ -k_ -o zaczilla.pot `find . -type f -name '*.c' -print`
+	xgettext -kN_ -k_ -o ZacZilla.pot `find . -type f -name '*.c' -print`

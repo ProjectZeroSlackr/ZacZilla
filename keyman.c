@@ -139,8 +139,8 @@ static struct yomidata {
 	char tokud[500];
 }wyomidata;
 
-static char pathimage[]="/mnt/aj/KMData/pict.gif";
-static char pathmap[]="/mnt/aj/KMData/mapdata/stage1.txt";
+static char pathimage[]="/opt/Zillae/ZacZilla/Data/KMData/pict.gif";
+static char pathmap[]="/opt/Zillae/ZacZilla/Data/KMData/mapdata/stage1.txt";
 
 static void kmbitmap(void){
 	
@@ -579,8 +579,11 @@ static void opencard(void){
 }
 
 static void startgame(void){
-	if (training==0){sprintf(pathmap,"/etc/KMData/mapdata/stage%d.txt",wmenukey.STAGE);}
-	else if (training==1){tranum++;sprintf(pathmap,"/etc/KMData/tra/tra%d.txt",tranum);}
+// KERIPO MOD
+	//if (training==0){sprintf(pathmap,"/etc/KMData/mapdata/stage%d.txt",wmenukey.STAGE);}
+	if (training==0){sprintf(pathmap,"/opt/Zillae/ZacZilla/Data/KMData/mapdata/stage%d.txt",wmenukey.STAGE);}
+	//else if (training==1){tranum++;sprintf(pathmap,"/etc/KMData/tra/tra%d.txt",tranum);}
+	else if (training==1){tranum++;sprintf(pathmap,"/opt/Zillae/ZacZilla/Data/KMData/tra/tra%d.txt",tranum);}
 	switch (wmenukey.KEY){
 		case 1: wsetkey.KLEFT='l';
 			wsetkey.KRIGHT='r';
@@ -1184,7 +1187,7 @@ void new_keyman_window( void )
 	keyman_do_draw, keyman_handle_event);
 
 		
-	if (!(kmimage_id=GrLoadImageFromFile("/mnt/aj/KMData/pict.gif",0))){
+	if (!(kmimage_id=GrLoadImageFromFile("/opt/Zillae/ZacZilla/Data/KMData/pict.gif",0))){
 		GAMEN=NODATA;
 		
 	}

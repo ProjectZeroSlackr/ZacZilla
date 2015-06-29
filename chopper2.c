@@ -131,12 +131,16 @@ int hs;
 static void LoadSettings()
 {
 	if(DISABLESETTINGS) return;
-hs=readHighScore("/mnt/aj/.chopper");
+// KERIPO MOD
+//hs=readHighScore("Data/.chopper");
+hs=readHighScore("/opt/Zillae/ZacZilla/Data/chopper.txt");
 }
 static void SaveSettings(int closeonly)
 {
 	if(DISABLESETTINGS) return;
-	writeHighScore("/mnt/aj./chopper",hs);
+	// KERIPO MOD	
+	//writeHighScore("Data/./chopper",hs);	
+	writeHighScore("/opt/Zillae/ZacZilla/Data/chopper.txt",hs);
 		
 }
 
@@ -148,7 +152,9 @@ static void PutSetting(int setting, int value)
 static int GetSetting(int setting)
 {
 	if(DISABLESETTINGS) return 0;
-	return readHighScore("/mnt/aj/.chopper");
+	// KERIPO MOD	
+	//return readHighScore("Data/.chopper");
+	return readHighScore("/opt/Zillae/ZacZilla/Data/chopper.txt");
 }
 	
 

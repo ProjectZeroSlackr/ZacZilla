@@ -81,8 +81,10 @@
 
 #ifdef IPOD
 #define SCHEMESDIR "/usr/share/schemes/"
+#define SCHEMECONF "/opt/Zillae/ZacZilla/Conf/scheme.conf"
 #else
 #define SCHEMESDIR "schemes/"
+#define SCHEMECONF "scheme.conf"
 #endif
 
 /******************************************************************************
@@ -92,9 +94,21 @@
 /* this sets a new scheme.  It constrains the input value to something valid */
 void appearance_set_color_scheme (const char *file, int save)
 {
+// KERIPO MOD
+/*
     if (save) {
 	unlink (SCHEMESDIR "default.cs");
 	symlink (file, SCHEMESDIR "default.cs");
+    }
+*/
+    if (save) {
+	FILE *fconf;
+	if ((fconf = fopen(SCHEMECONF, "w")) == NULL) {
+		perror(SCHEMECONF);
+		return;
+	}
+	fprintf(fconf, "%s%s", SCHEMESDIR, file);
+	fclose(fconf);
     }
 
     ttk_epoch++;
@@ -109,15 +123,27 @@ void appearance_set_color_scheme (const char *file, int save)
 /* this resets the color scheme to the last actually-set value */
 void appearance_reset_color_scheme() 
 {
-    ttk_ap_load (SCHEMESDIR "default.cs");
+    // KERIPO MOD
+    //ttk_ap_load (SCHEMESDIR "default.cs");
+	appearance_set_color_scheme(appearance_get_color_scheme(), 0);
 }
 
 /* this gets the current color scheme value */
 const char *appearance_get_color_scheme (void)
 {
-    static char link[256];
-    readlink (SCHEMESDIR "default.cs", link, 256);
-    return link;
+    // KERIPO MOD
+    //static char link[256];
+    //readlink (SCHEMESDIR "default.cs", link, 256);
+    //return link;
+	static char scheme[256];
+	FILE *fconf;
+	if ((fconf = fopen(SCHEMECONF, "r")) == NULL) {
+		perror(SCHEMECONF);
+		return NULL;
+	}
+	fscanf(fconf, "%s", scheme);
+	fclose(fconf);
+	return scheme;
 }
 
 /* this gets a color from the current color scheme */
@@ -161,7 +187,9 @@ TWindow *appearance_select_color_scheme (ttk_menu_item *item)
     }
     struct dirent *d;
     while ((d = readdir (dp)) != 0) {
-	if (strchr (d->d_name, '.') && !strcmp (strrchr (d->d_name, '.'), ".cs") && !!strcmp (d->d_name, "default.cs")) {
+	// KERIPO MOD
+	//if (strchr (d->d_name, '.') && !strcmp (strrchr (d->d_name, '.'), ".cs") && !!strcmp (d->d_name, "default.cs")) {
+	if (strchr (d->d_name, '.') && !strcmp (strrchr (d->d_name, '.'), ".cs")) {
 	    ttk_menu_item *item = calloc (1, sizeof(struct ttk_menu_item));
 	    FILE *f = fopen (d->d_name, "r");
 	    if (!f) continue;
@@ -222,4 +250,5 @@ int appearance_get_decorations( void )
 void appearance_init( void )
 {
 	appearance_set_decorations( ipod_get_setting( DECORATIONS ));
+	appearance_reset_color_scheme();
 }

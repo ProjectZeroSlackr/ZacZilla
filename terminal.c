@@ -937,7 +937,7 @@ int terminal_pty_open(int * master, int * slave, char * pty_name, struct termios
 /* ======== program initialization ======== */
 
 #ifdef IPOD
-#define TERMINAL_EXEC_PATH ("/mnt/aj/minix-sh")
+#define TERMINAL_EXEC_PATH ("/bin/sh")
 #define TERMINAL_EXEC_NAME ("minix-sh")
 #else
 #define TERMINAL_EXEC_PATH ("/bin/sh")

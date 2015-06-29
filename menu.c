@@ -41,7 +41,7 @@ extern void new_world_clock_window(void);
 extern void new_Set_Time_window(void);
 extern void new_Set_DateTime_window(void);
 extern void new_oth_window(void);
-extern void new_steroids_window(void);
+//extern void new_steroids_window(void);
 extern void new_bluecube_window(void);
 #ifndef MPDC
 extern void new_itunes_track(void);
@@ -73,7 +73,7 @@ extern void new_periodic_window(void);
 extern void new_blackjack_window(void);
 extern void new_credits_window(void);
 extern TWindow *new_factor_window(void);
-extern void new_sudoku_window(void);
+//extern void new_sudoku_window(void);
 extern void new_memoryg_window(void);
 
 //MODULES:
@@ -88,28 +88,28 @@ extern TWindow *capture_start(void);
 extern TWindow *new_1dtetris_window(void);
 extern TWindow *new_chopper2_window(void);
 extern TWindow *new_chopper2_highscore(void);
-extern TWindow *new_brickm_window(void);
+//extern TWindow *new_brickm_window(void);
 extern TWindow *new_bridget_window(void);
-extern TWindow *new_connect4_window(void);
+//extern TWindow *new_connect4_window(void);
 extern TWindow *new_craps_window(void);
 extern TWindow *new_colormixer_window(void);
-extern TWindow *new_duckhunt_window(void);
-extern TWindow *new_duckhuntHS_window(void);
+//extern TWindow *new_duckhunt_window(void);
+//extern TWindow *new_duckhuntHS_window(void);
 extern TWindow *new_invaders2_window(void);
 extern TWindow *new_reflex_window(void);
 //extern TWIndow *new_curve_window(void);
 extern TWindow *new_ouch_window(void);
 extern TWindow *new_deal_window(void);
 extern TWindow *wumpus_new_game(void);
-extern TWindow *iconui_new_menu_window(void);
+//extern TWindow *iconui_new_menu_window(void);
 extern TWindow *new_izilla_window(void);
 extern TWindow *new_usvsthem_window(void);
 extern TWindow *new_piezomaker(void);
-extern TWindow *new_avalanche_window(void);
+//extern TWindow *new_avalanche_window(void);
 extern TWindow * new_podwrite_window(void);
-extern TWindow *new_iracer_window(void);
-extern TWindow * new_terminal_window(void);
-extern TWindow *new_e3d_window(void);
+//extern TWindow *new_iracer_window(void);
+//extern TWindow * new_terminal_window(void);
+//extern TWindow *new_e3d_window(void);
 #ifdef MIKMOD
 extern void new_mikmod_window(void);
 #endif
@@ -133,11 +133,13 @@ static ttk_menu_item tuxchess_menu[] = {
 	{0}
 };
 
+/*
 static ttk_menu_item duckhunt_menu[]={
   {N_("Start Game"),{pz_mh_legacy},0,new_duckhunt_window},
   {N_("High Scores"),{pz_mh_legacy},0,new_duckhuntHS_window},
   {0}
 };
+*/
 
 static ttk_menu_item chopper_menu[]={
   {N_("Start Game"),{pz_mh_legacy},0,new_chopper2_window},
@@ -151,22 +153,22 @@ static ttk_menu_item chopper_menu[]={
  // {N
 static ttk_menu_item games_menu[] = {
 	{N_("1D Tetris"),{pz_mh_legacy},0,new_1dtetris_window},
-	{N_("Avalanche"),{pz_mh_legacy},0,new_avalanche_window},
+	//{N_("Avalanche"),{pz_mh_legacy},0,new_avalanche_window},
 	{N_("BlackJack"), {pz_mh_legacy}, 0, new_blackjack_window},
 	{N_("BlueCube"), {pz_mh_legacy}, 0, new_bluecube_window},
-	{N_("BrickMania"), {pz_mh_legacy},0,new_brickm_window},
+	//{N_("BrickMania"), {pz_mh_legacy},0,new_brickm_window},
 	{N_("Bridget"),{pz_mh_legacy},0,new_bridget_window},
 	{N_("Chopper"), {ttk_mh_sub}, TTK_MENU_ICON_SUB, chopper_menu},
-	{N_("Connect 4"),{pz_mh_legacy},0,new_connect4_window},
+	//{N_("Connect 4"),{pz_mh_legacy},0,new_connect4_window},
 	{N_("Craps"),{pz_mh_legacy},0,new_craps_window},
-//	{N_("Curve"),{ttk_mh_sub},TTK_MENU_ICON_SUB,curve_menu},
-	{N_("Duckhunt"),{ttk_mh_sub},TTK_MENU_ICON_SUB,duckhunt_menu},
+	//{N_("Curve"),{ttk_mh_sub},TTK_MENU_ICON_SUB,curve_menu},
+	//{N_("Duckhunt"),{ttk_mh_sub},TTK_MENU_ICON_SUB,duckhunt_menu},
 	{N_("Hunt The Wumpus"), {pz_mh_legacy}, 0, wumpus_new_game},
 	{N_("iDeal or No Deal"),{pz_mh_legacy},0,new_deal_window},
 	{N_("Invaders"), {pz_mh_legacy}, 0, new_invaders_window},
 	{N_("Invaders2"), {pz_mh_legacy}, 0, new_invaders2_window},
 	{N_("iPobble"), {pz_mh_legacy}, 0, new_ipobble_window},
-	{N_("iPod Racer"), {pz_mh_legacy}, 0, new_iracer_window},
+	//{N_("iPod Racer"), {pz_mh_legacy}, 0, new_iracer_window},
 	{N_("Kaboom!"), {pz_mh_legacy}, 0, new_kaboom_window},
 	{N_("Lights"), {ttk_mh_sub}, TTK_MENU_ICON_SUB, lights_menu},
 	{N_("Memory"),{pz_mh_legacy},0,new_memoryg_window},
@@ -174,8 +176,8 @@ static ttk_menu_item games_menu[] = {
 	{N_("Othello"), {pz_mh_legacy}, 0, new_oth_window},
 	{N_("Pong"), {pz_mh_legacy}, 0, new_pong_window},
 	{N_("Reflex"),{pz_mh_legacy},0,new_reflex_window},
-	{N_("Steroids"), {pz_mh_legacy}, 0, new_steroids_window},
-	{N_("Sudoku"), {pz_mh_legacy}, 0, new_sudoku_window},
+	//{N_("Steroids"), {pz_mh_legacy}, 0, new_steroids_window},
+	//{N_("Sudoku"), {pz_mh_legacy}, 0, new_sudoku_window},
 	{N_("Tic-Tac-Toe"), {pz_mh_legacy}, 0, new_tictactoe_window},
 	{N_("Tunnel"), {pz_mh_legacy}, 0, new_tunnel_window},
 	{N_("TuxChess"), {ttk_mh_sub}, TTK_MENU_ICON_SUB, tuxchess_menu},
@@ -187,7 +189,7 @@ static ttk_menu_item games_menu[] = {
 static ttk_menu_item stuff_menu[] = {
 	{N_("Cube"), {pz_mh_legacy}, 0, new_cube_window},
 	{N_("Dialer"), {pz_mh_legacy}, 0, new_dialer_window},
-	{N_("Engine 3D"), {pz_mh_legacy}, 0, new_e3d_window},
+	//{N_("Engine 3D"), {pz_mh_legacy}, 0, new_e3d_window},
 	{N_("Factor"), {pz_mh_legacy}, 0, new_factor_window},
 	{N_("Matrix"), {pz_mh_legacy}, 0, new_matrix_window},
 	{N_("Mystify"),{pz_mh_legacy},0,mystify_new_window},
@@ -204,7 +206,7 @@ static ttk_menu_item apps_menu[] = {
 	{N_("Piezo Maker"), {pz_mh_legacy}, 0, new_piezomaker},
 	{N_("PodDraw"), {pz_mh_legacy}, 0, new_poddraw_window},
 	{N_("PodWrite"), {pz_mh_legacy}, 0, new_podwrite_window},
-	{N_("Terminal"), {pz_mh_legacy}, 0, new_terminal_window},
+	//{N_("Terminal"), {pz_mh_legacy}, 0, new_terminal_window},
 	//{N_("Screen Capture"),{pz_mh_legacy},0,capture_start},
 	{0}
 };
@@ -328,11 +330,12 @@ static ttk_menu_item txtin_menu[] = {
 };
 extern TWindow *new_standard_text_demo_window();
 static const char *txtin_options[] = {
-	N_("Off"), N_("Serial"), N_("Scroll Through"), N_("On Screen Keybaord"), N_("Morse Code"),
+	N_("Off"), N_("Serial"), N_("Scroll Through"), N_("On Screen Keyboard"), N_("Morse Code"),
 	N_("Cursive"), N_("WheelBoard"), N_("4-Button Keyboard"), N_("Dial Type"),N_("Telephone Keypad (4g+)"),N_("ThumbScript (4g+)"),
 	N_("4-Button Telephone Keypad"), 0
 };
-extern TWindow * new_run_window();
+// KERIPO MOD
+//extern TWindow * new_run_window();
 static ttk_menu_item settings_menu[] = {
 	{N_("About"), {pz_mh_legacy},0,new_about_window},
 	{N_("Credits"), {pz_mh_legacy}, 0, new_credits_window},
@@ -419,12 +422,14 @@ static ttk_menu_item main_menu[] = {
 #endif /* MPDC */
 	{N_("File Browser"), {pz_mh_legacy},TTK_MENU_ICON_SUB,new_browser_window},
 	{N_("Power"), {ttk_mh_sub}, TTK_MENU_ICON_SUB, power_menu},
-	{N_("Run"),{pz_mh_legacy},0,new_run_window},
+	// KERIPO MOD
+	// obsolete
+	//{N_("Run"),{pz_mh_legacy},0,new_run_window},
 
 	{0}
 };
 extern ttk_menu_item empty_menu[];
-TWindow *(*pz_new_menu_window)(TWidget *) = iconui_new_menu_window;
+//TWindow *(*pz_new_menu_window)(TWidget *) = iconui_new_menu_window;
 void new_menu_window()
 {
     

@@ -76,10 +76,10 @@ void Vortex_SetLevel( int l )
 	}
 
 	for( p=0 ; p<16 ; p++ ) {
-	    Vortex_globals.minx = MIN( Vortex_globals.minx, Vortex_globals.ld->x[p] );
-	    Vortex_globals.miny = MIN( Vortex_globals.miny, Vortex_globals.ld->y[p] );
-	    Vortex_globals.maxx = MAX( Vortex_globals.maxx, Vortex_globals.ld->x[p] );
-	    Vortex_globals.maxy = MAX( Vortex_globals.maxy, Vortex_globals.ld->y[p] );
+	    Vortex_globals.minx = VMIN( Vortex_globals.minx, Vortex_globals.ld->x[p] );
+	    Vortex_globals.miny = VMIN( Vortex_globals.miny, Vortex_globals.ld->y[p] );
+	    Vortex_globals.maxx = VMAX( Vortex_globals.maxx, Vortex_globals.ld->x[p] );
+	    Vortex_globals.maxy = VMAX( Vortex_globals.maxy, Vortex_globals.ld->y[p] );
 	}
 
 	Vortex_globals.xskew  = Vortex_globals.minx;
